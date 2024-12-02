@@ -155,6 +155,7 @@ CREATE TABLE PosStats (
     NumInterviews INT,
     AppAmount INT,
     CallBackNum INT,
+    Learning INT,
     MeanResponseTime Time,
     CONSTRAINT PSPR FOREIGN KEY (PositionID)
         REFERENCES PositionTable(PositionID)
