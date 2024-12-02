@@ -153,14 +153,28 @@ CREATE TABLE PosStats (
     PositionID INTEGER,
     PosStatID INTEGER AUTO_INCREMENT NOT NULL PRIMARY KEY,
     YieldRate FLOAT,
-    NumInterviews INT,
-    AppAmount INT,
-    CallBackNum INT,
-    Learning INT,
-    Environment INT,
-    MeanResponseTime Time,
+    AvgAppAmount INT,
+    AvgInterview INT,
+    AvgGpa INT,
+    AvgLearning INT,
+    AvgEnvironment INT,
+    AvgInterviewTime Time,
     CONSTRAINT PSPR FOREIGN KEY (PositionID)
         REFERENCES PositionTable(PositionID)
+        ON UPDATE cascade ON DELETE restrict
+);
+
+CREATE TABLE PostStats (
+    PostingID INTEGER,
+    PostStatID INTEGER AUTO_INCREMENT NOT NULL PRIMARY KEY,
+    AppAmount FLOAT,
+    InterviewAmount INT,
+    OfferAmnt INT,
+    AcceptAmnt INT,
+    CallBackNum INT,
+    MeanResponseTime Time,
+    CONSTRAINT POS FOREIGN KEY (PostingID)
+        REFERENCES JobPosting(PostingID)
         ON UPDATE cascade ON DELETE restrict
 );
 
