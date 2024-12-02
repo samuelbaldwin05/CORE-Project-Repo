@@ -55,6 +55,9 @@ CREATE TABLE Users (
     MajorID INT,
     GPA FLOAT,
     AdvisorId INT,
+    AppCount INT,
+    OfferCount INT,
+    PreviousCount INT,
     CONSTRAINT UA FOREIGN KEY (AdvisorId)
         REFERENCES Advisor(AdvisorId)
         ON UPDATE cascade ON DELETE restrict,
@@ -155,5 +158,19 @@ CREATE TABLE PosStats (
     MeanResponseTime Time,
     CONSTRAINT PSPR FOREIGN KEY (PosReviewID)
         REFERENCES PositionReview(PosReviewID)
-        ON UPDATE cascade ON DELETE restrict,
-)
+        ON UPDATE cascade ON DELETE restrict
+);
+
+CREATE TABLE PosStats (
+    PositionID INTEGER,
+    PosStatID INTEGER AUTO_INCREMENT NOT NULL PRIMARY KEY,
+    YieldRate FLOAT,
+    NumInterviews INT,
+    AppAmount INT,
+    CallBackNum INT,
+    MeanResponseTime Time,
+    CONSTRAINT PSPR FOREIGN KEY (PositionID)
+        REFERENCES PositionTable(PositionID)
+        ON UPDATE cascade ON DELETE restrict
+);
+
