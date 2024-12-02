@@ -149,19 +149,6 @@ CREATE TABLE CompanyReviewers (
 );
 
 CREATE TABLE PosStats (
-    PosReviewID INTEGER,
-    PosStatID INTEGER AUTO_INCREMENT NOT NULL PRIMARY KEY,
-    YieldRate FLOAT,
-    NumInterviews INT,
-    AppAmount INT,
-    CallBackNum INT,
-    MeanResponseTime Time,
-    CONSTRAINT PSPR FOREIGN KEY (PosReviewID)
-        REFERENCES PositionReview(PosReviewID)
-        ON UPDATE cascade ON DELETE restrict
-);
-
-CREATE TABLE PosStats (
     PositionID INTEGER,
     PosStatID INTEGER AUTO_INCREMENT NOT NULL PRIMARY KEY,
     YieldRate FLOAT,
