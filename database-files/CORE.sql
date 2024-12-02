@@ -95,12 +95,13 @@ CREATE TABLE PositionTable (
 -- Step 5: Tables with Foreign Keys to Tables in Step 4
 CREATE TABLE PositionReview (
     PosReviewID INTEGER AUTO_INCREMENT NOT NULL PRIMARY KEY,
-    Description VARCHAR(255),
+    Descriptions VARCHAR(255),
     Offer BOOL,
     ApplicationRating TINYINT(5),
     EnvironmentRating TINYINT(5),
     EducationRating TINYINT(5),
     ProfessionalRating TINYINT(5),
+    LearningRating, TINYINT(5)
     Applied BOOL,
     AppliedDate DATETIME,
     ResponseDate DATETIME,
@@ -155,6 +156,8 @@ CREATE TABLE PosStats (
     NumInterviews INT,
     AppAmount INT,
     CallBackNum INT,
+    Learning INT,
+    Environment INT,
     MeanResponseTime Time,
     CONSTRAINT PSPR FOREIGN KEY (PositionID)
         REFERENCES PositionTable(PositionID)
