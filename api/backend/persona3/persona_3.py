@@ -1,5 +1,5 @@
 ########################################################
-# Routes for Postings blueprint
+# Routes for persona3 blueprint
 ########################################################
 from flask import Blueprint
 from flask import request
@@ -12,6 +12,6 @@ from backend.ml_models.model01 import predict
 #------------------------------------------------------------
 # Create a new Blueprint object, which is a collection of 
 # routes.
-postings = Blueprint('postings', __name__)
+persona3 = Blueprint('persona3', __name__)
 
 #------------------------------------------------------------
