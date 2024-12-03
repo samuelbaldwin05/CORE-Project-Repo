@@ -22,8 +22,8 @@ def response_generator():
     time.sleep(0.05)
 #-----------------------------------------------------------------------
 
-st.set_page_config (page_title="Sample Chat Bot", page_icon="🤖")
-add_logo("assets/logo.png", height=400)
+#st.set_page_config (page_title="Sample Chat Bot", page_icon="🤖")
+#add_logo("assets/logo.png", height=400)
 
 st.title("Echo Bot 🤖")
 

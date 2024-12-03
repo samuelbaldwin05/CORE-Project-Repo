@@ -14,45 +14,60 @@ def AboutPageNav():
     st.sidebar.page_link("pages/30_About.py", label="About", icon="🧠")
 
 
-#### ------------------------ Examples for Role of pol_strat_advisor ------------------------
+#### ------------------------ Roles of Coop Searcher ------------------------
 def PolStratAdvHomeNav():
     st.sidebar.page_link(
-        "pages/00_Pol_Strat_Home.py", label="Political Strategist Home", icon="👤"
+        "pages/00_Coop_Searcher_Home.py", label="Coop Searcher Home", icon="👤"
     )
 
 
-def WorldBankVizNav():
+def ViewCoopsNav():
     st.sidebar.page_link(
-        "pages/01_World_Bank_Viz.py", label="World Bank Visualization", icon="🏦"
+        "pages/01_View_Coops.py", label="View Coops", icon="🏦"
     )
 
 
-def MapDemoNav():
-    st.sidebar.page_link("pages/02_Map_Demo.py", label="Map Demonstration", icon="🗺️")
-
-
-## ------------------------ Examples for Role of usaid_worker ------------------------
-def ApiTestNav():
-    st.sidebar.page_link("pages/12_API_Test.py", label="Test the API", icon="🛜")
-
-
-def PredictionNav():
+def ViewCompaniesNav():
     st.sidebar.page_link(
-        "pages/11_Prediction.py", label="Regression Prediction", icon="📈"
+        "pages/02_View_Companies.py", label="View Companies", icon="🗺️"
     )
 
 
-def ClassificationNav():
+def ViewPostingsNav():
     st.sidebar.page_link(
-        "pages/13_Classification.py", label="Classification Demo", icon="🌺"
+        "pages/03_View_Job_Postings.py", label="View Job Postings", icon="🗺️"
+    )
+
+
+## ------------------------ Roles of coop reviewer ------------------------
+def ReviewerHomeNav():
+    st.sidebar.page_link(
+        "pages/10_Coop_Reviewer_Home.py", label="Reviewer Home", icon="🏠"
+    )
+
+def CoopReviewNav():
+    st.sidebar.page_link("pages/11_Coop_Review.py", label="Review Coops", icon="🛜")
+
+
+def CompanyReviewNav():
+    st.sidebar.page_link(
+        "pages/13_Company_Review.py", label="Review Companies", icon="📈"
     )
 
 
 #### ------------------------ System Admin Role ------------------------
 def AdminPageNav():
-    st.sidebar.page_link("pages/20_Admin_Home.py", label="System Admin", icon="🖥️")
     st.sidebar.page_link(
-        "pages/21_ML_Model_Mgmt.py", label="ML Model Management", icon="🏢"
+        "pages/20_Admin_Home.py", label="System Admin", icon="🖥️"
+    )
+    st.sidebar.page_link(
+        "pages/21_Coop_Review_Mgmt.py", label="Coop Review Management", icon="🏢"
+    )
+    st.sidebar.page_link(
+        "pages/22_Company_Review_Mgmt.py", label="Company Review Management", icon="🏢"
+    )
+    st.sidebar.page_link(
+        "pages/23_Job_Posting_Mgmt.py", label="Job Posting Management", icon="🏢"
     )
 
 
@@ -61,7 +76,6 @@ def SideBarLinks(show_home=False):
     """
     This function handles adding links to the sidebar of the app based upon the logged-in user's role, which was put in the streamlit session_state object when logging in.
     """
-
     # add a logo to the sidebar always
     st.sidebar.image("app/src/assets/logo.png", width=150)
 
@@ -78,16 +92,18 @@ def SideBarLinks(show_home=False):
     if st.session_state["authenticated"]:
 
         # Show World Bank Link and Map Demo Link if the user is a political strategy advisor role.
-        if st.session_state["role"] == "pol_strat_advisor":
+        if st.session_state["role"] == "coop_searcher":
             PolStratAdvHomeNav()
-            WorldBankVizNav()
-            MapDemoNav()
+            ViewCoopsNav()
+            ViewCompaniesNav()
+            ViewPostingsNav()
 
-        # If the user role is usaid worker, show the Api Testing page
-        if st.session_state["role"] == "usaid_worker":
-            PredictionNav()
-            ApiTestNav()
-            ClassificationNav()
+        # If the user role is reviewer, show the Api Testing page
+        if st.session_state["role"] == "reviewer":
+            ReviewerHomeNav()
+            CoopReviewNav()
+            ViewCoopsNav()
+            CompanyReviewNav()
 
         # If the user is an administrator, give them access to the administrator pages
         if st.session_state["role"] == "administrator":

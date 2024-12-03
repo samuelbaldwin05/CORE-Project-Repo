@@ -8,11 +8,11 @@ st.write("# About this App")
 
 st.markdown (
     """
-    This is a demo app for CS 3200 Course Project.  
-
-    The goal of this demo is to provide information on the tech stack 
-    being used as well as demo some of the features of the various platforms. 
-
-    Stay tuned for more information and features to come!
+    This is an app intended to help Northeastern students
+    find co-ops that are right for them.
+    
+    Students can leave reviews on co-ops or the company they have worked for or applied to a position for,
+    rating and describing their experience so other students
+    can get a better sense of if they want to apply. 
     """
         )
