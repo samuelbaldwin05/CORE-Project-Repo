@@ -1,5 +1,5 @@
 ########################################################
-# Routes for persona2 blueprint
+# Routes for Postings blueprint
 ########################################################
 from flask import Blueprint
 from flask import request
@@ -12,7 +12,7 @@ from backend.ml_models.model01 import predict
 #------------------------------------------------------------
 # Create a new Blueprint object, which is a collection of 
 # routes.
-persona2 = Blueprint('persona2', __name__)
+postings = Blueprint('postings', __name__)
 
 #------------------------------------------------------------
 
@@ -43,8 +43,6 @@ def view_student_data (id):
     return response
     
 # ------------------------------------------------------------
-
-@persona2.route('/advisor/<id>', methods=['PUT'])
 
 
 
