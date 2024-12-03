@@ -2,7 +2,10 @@ import streamlit as st
 from streamlit_extras.app_logo import add_logo
 from modules.nav import SideBarLinks
 
-SideBarLinks(show_home=True)
+if not st.session_state['authenticated']:
+    SideBarLinks(show_home=True)
+else:
+    SideBarLinks()
 
 st.write("# About this App")
 
