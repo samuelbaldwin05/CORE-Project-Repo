@@ -11,7 +11,7 @@ def HomeNav():
 
 
 def AboutPageNav():
-    st.sidebar.page_link("pages/30_About.py", label="About", icon="🧠")
+    st.sidebar.page_link("pages/40_About.py", label="About", icon="🧠")
 
 
 #### ------------------------ Roles of Coop Searcher ------------------------
@@ -51,10 +51,24 @@ def CoopReviewNav():
 
 def CompanyReviewNav():
     st.sidebar.page_link(
-        "pages/13_Company_Review.py", label="Review Companies", icon="📈"
+        "pages/12_Company_Review.py", label="Review Companies", icon="📈"
     )
 
+## ------------------------ Roles of faculty coop advisor ---------------------
+def FacultyHomeNav():
+    st.sidebar.page_link(
+        "pages/30_Faculty_Home.py", label="Faculty Home", icon="🏠"
+    )
 
+def StudentDataNav():
+    st.sidebar.page_link(
+        "pages/31_Student_Data.py", label="View Student Data", icon="🏠"
+    )
+
+def CoopDataNav():
+    st.sidebar.page_link(
+        "pages/32_Coop_Data.py", label="View Coop Data", icon="🏠"
+    )
 #### ------------------------ System Admin Role ------------------------
 def AdminPageNav():
     st.sidebar.page_link(
@@ -104,6 +118,11 @@ def SideBarLinks(show_home=False):
             CoopReviewNav()
             ViewCoopsNav()
             CompanyReviewNav()
+
+        if st.session_state["role"] == "faculty":
+            FacultyHomeNav()
+            StudentDataNav()
+            CoopDataNav()
 
         # If the user is an administrator, give them access to the administrator pages
         if st.session_state["role"] == "administrator":
