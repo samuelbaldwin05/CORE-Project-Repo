@@ -8,7 +8,7 @@ st.set_page_config(layout = 'wide')
 
 SideBarLinks()
 
-st.title('App Administration Page')
+st.title('Coop Review Management')
 
 st.write('\n\n')
 st.write('## Model 1 Maintenance')
