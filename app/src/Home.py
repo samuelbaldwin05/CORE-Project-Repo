@@ -65,7 +65,15 @@ if st.button('Act as Samantha, a co-op reviewer',
     st.session_state['first_name'] = 'Samantha'
     st.switch_page('pages/10_Coop_Reviewer_Home.py')
 
-if st.button('Act as System Administrator', 
+if st.button('Act as Cammy, a co-op advising faculty',
+             type = 'primary',
+             use_container_width=True):
+    st.session_state['authenticated'] = True
+    st.session_state['role'] = 'faculty'
+    st.session_state['first_name'] = 'Cammy'
+    st.switch_page('pages/30_Faculty_Home.py')
+
+if st.button('Act as Michelle, a System Administrator',
             type = 'primary', 
             use_container_width=True):
     st.session_state['authenticated'] = True

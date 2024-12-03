@@ -27,4 +27,4 @@ if st.button('View Coops',
 if st.button("Review a Company",
              type='primary',
              use_container_width=True):
-  st.switch_page('pages/13_Company_Review.py')
+  st.switch_page('pages/12_Company_Review.py')
