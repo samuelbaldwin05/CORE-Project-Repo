@@ -16,7 +16,7 @@ persona2 = Blueprint('persona2', __name__)
 
 #------------------------------------------------------------
 
-@persona2.route('/advisor/<id>', methods=['GET'])
+@persona2.route('/persona2/<id>', methods=['GET'])
 def view_student_data (id):
 
     query = f'''SELECT Username,
@@ -43,4 +43,8 @@ def view_student_data (id):
     return response
     
 # ------------------------------------------------------------
+
+@persona2.route('/advisor/<id>', methods=['PUT'])
+
+
 
