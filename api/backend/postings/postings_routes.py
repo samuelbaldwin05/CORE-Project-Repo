@@ -9,3 +9,9 @@ from flask import current_app
 from backend.db_connection import db
 from backend.ml_models.model01 import predict
 
+#------------------------------------------------------------
+# Create a new Blueprint object, which is a collection of 
+# routes.
+postings = Blueprint('postings', __name__)
+
+#------------------------------------------------------------
