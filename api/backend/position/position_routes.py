@@ -141,8 +141,8 @@ def get_reviews_by_position(PositionID=None):
 
 
 # creating a new route for a specific position
-@position.route('/PositionReview/<int:PositionID>', methods=['POST'])
-def add_review(PositionID):
+@position.route('/PositionReview', methods=['POST'])
+def add_review():
     data = request.json  # Expecting JSON input
     query = '''
         INSERT INTO PositionReview (
@@ -156,7 +156,7 @@ def add_review(PositionID):
         data['Description'], data['Offer'], data['ApplicationRating'],
         data['EnvironmentRating'], data['EducationRating'], 
         data['EnjoymentRating'], data['Applied'], data['AppliedDate'],
-        data['ResponseDate'], PositionID
+        data['ResponseDate']
     )
     cursor = db.get_db().cursor()
     cursor.execute(query, params)
