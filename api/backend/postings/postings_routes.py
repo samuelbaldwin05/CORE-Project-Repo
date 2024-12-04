@@ -106,31 +106,5 @@ def view_student_data (id):
     response = make_response(jsonify(theData))
     response.status_code = 200
     return response
-    
-# ------------------------------------------------------------
 
-# Get positions ordered by yield rate
-@postings.route('/Position/PosStats/YieldRate', methods=['GET'])
-def get_positions_by_yield_rate():
-    query = '''
-        SELECT pt.*, pst.yield_rate 
-        FROM positiontable pt 
-        JOIN positionstatstable pst 
-        ON pt.position_id = pst.position_id 
-        ORDER BY pst.yield_rate
-    '''
-    
-    # get a cursor object from the database
-    cursor = db.get_db().cursor()
-
-    # use cursor to query the database for positions ordered by yield rate
-    cursor.execute(query)
-
-    # fetch all the data from the cursor
-    theData = cursor.fetchall()
-
-    # Create a HTTP Response object and add results of the query to it after "jsonify"-ing it.
-    response = make_response(jsonify(theData))
-    response.status_code = 200
-    return response
 
