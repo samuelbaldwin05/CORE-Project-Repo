@@ -156,7 +156,7 @@ def add_review():
         data['Description'], data['Offer'], data['ApplicationRating'],
         data['EnvironmentRating'], data['EducationRating'], 
         data['EnjoymentRating'], data['Applied'], data['AppliedDate'],
-        data['ResponseDate']
+        data['ResponseDate'], data['PositionID']
     )
     cursor = db.get_db().cursor()
     cursor.execute(query, params)
