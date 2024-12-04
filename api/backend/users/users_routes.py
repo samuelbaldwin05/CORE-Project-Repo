@@ -17,7 +17,7 @@ users = Blueprint('users', __name__)
 # GET route for Persona2, retrieves student data under specfic advisor
 
 @users.route('/users/<advisorid>', methods=['GET'])
-def view_student_data (AdvisorId):
+def view_student_data_advisorid (AdvisorId):
 
     query = f'''SELECT Username,
                        GPA, 
