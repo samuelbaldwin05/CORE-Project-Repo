@@ -74,7 +74,7 @@ CREATE TABLE PositionTable (
     Skills VARCHAR(300),
     Environment VARCHAR(20),
     AdditionalQuestions BOOL,
-    CoverLetter BOOL,
+    CoverLetter BOOL
 );
 
 CREATE TABLE JobPosting (
