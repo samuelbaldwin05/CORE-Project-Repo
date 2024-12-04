@@ -1,110 +1,142 @@
-########################################################
-# Routes for Postings blueprint
-########################################################
-from flask import Blueprint
-from flask import request
-from flask import jsonify
-from flask import make_response
-from flask import current_app
+from flask import Blueprint, request, jsonify, make_response, current_app
 from backend.db_connection import db
-from backend.ml_models.model01 import predict
 
-#------------------------------------------------------------
-# Create a new Blueprint object, which is a collection of 
-# routes.
-postings = Blueprint('postings', __name__)
+# Create a Blueprint object for job postings
+job_posting = Blueprint('job_posting', __name__)
 
-# Get all reviews for a company
-@postings.route('/CompanyReview/<CompanyID>', methods=['GET'])
-def get_company_reviews(CompanyID):
-    query = f'''
-        SELECT * FROM CompanyReview WHERE CompanyID = {CompanyID}
-    '''
-    
-    # get a cursor object from the database
-    cursor = db.get_db().cursor()
+########################################################
+# Routes for JobPosting
+########################################################
 
-    # use cursor to query the database for reviews
-    cursor.execute(query)
-
-    # fetch all the data from the cursor
-    theData = cursor.fetchall()
-
-    # Create a HTTP Response object and add results of the query to it after "jsonify"-ing it.
-    response = make_response(jsonify(theData))
-    response.status_code = 200
-    return response
-
-# Add a new review for a company
-@postings.route('/CompanyReview/<CompanyID>', methods=['POST'])
-def add_company_review(CompanyID):
-    # In a POST request, there is a collecting data from the request object 
-    the_data = request.json
-    current_app.logger.info(the_data)
-
-    # extracting the variable
-    review_type = the_data['Type']
-    description = the_data['Description']
-    environment_rating = the_data['EnvironmentRating']
-    culture_rating = the_data['CultureRating']
-    
-    query = f'''
-        INSERT INTO CompanyReview (CompanyID, Type, Description, EnvironmentRating, CultureRating)
-        VALUES ({CompanyID}, '{review_type}', '{description}', {environment_rating}, {culture_rating})
-    '''
-    current_app.logger.info(query)
-
-    # executing and committing the insert statement 
+# Get all job postings
+@job_posting.route('/JobPosting', methods=['GET'])
+def get_all_job_postings():
+    query = 'SELECT * FROM JobPosting'
     cursor = db.get_db().cursor()
     cursor.execute(query)
+    data = cursor.fetchall()
+    return jsonify(data), 200
+
+# Get job postings by PositionID
+@job_posting.route('/JobPosting/<int:PositionID>', methods=['GET'])
+def get_job_postings_by_position(PositionID):
+    query = 'SELECT * FROM JobPosting WHERE PositionID = %s'
+    cursor = db.get_db().cursor()
+    cursor.execute(query, (PositionID,))
+    data = cursor.fetchall()
+    return jsonify(data), 200
+
+# Get job postings by PositionID
+@job_posting.route('/JobPosting/<int:CompanyID>', methods=['GET'])
+def get_job_postings_by_position(PositionID):
+    query = 'SELECT * FROM JobPosting WHERE CompanyID = %s'
+    cursor = db.get_db().cursor()
+    cursor.execute(query, (PositionID,))
+    data = cursor.fetchall()
+    return jsonify(data), 200
+
+# Add a new job posting
+@job_posting.route('/JobPosting', methods=['POST'])
+def add_new_job_posting():
+    data = request.json
+    query = '''
+        INSERT INTO JobPosting (CompanyID, DatePosted, Status, PositionID)
+        VALUES (%s, %s, %s, %s)
+    '''
+    params = (data['CompanyID'], data['DatePosted'], data['Status'], data['PositionID'])
+    cursor = db.get_db().cursor()
+    cursor.execute(query, params)
     db.get_db().commit()
-    
-    response = make_response("Successfully added review")
-    response.status_code = 200
-    return response
+    return jsonify({'message': 'Job posting added successfully'}), 201
 
-# Delete a review by ComReviewID
-@postings.route('/CompanyReview/<ComReviewID>', methods=['DELETE'])
-def delete_company_review(ComReviewID):
-    query = f'''
-        DELETE FROM CompanyReview WHERE ComReviewID = {ComReviewID}
+# Update a job posting
+@job_posting.route('/JobPosting/<int:PostingID>', methods=['PUT'])
+def update_job_posting(PostingID):
+    data = request.json
+    query = '''
+        UPDATE JobPosting
+        SET CompanyID = %s,
+            DatePosted = %s,
+            Status = %s,
+            PositionID = %s
+        WHERE PostingID = %s
     '''
-    current_app.logger.info(query)
-
-    # executing and committing the delete statement 
+    params = (data['CompanyID'], data['DatePosted'], data['Status'], data['PositionID'], PostingID)
     cursor = db.get_db().cursor()
-    cursor.execute(query)
+    cursor.execute(query, params)
     db.get_db().commit()
-    
-    response = make_response("Successfully deleted review")
-    response.status_code = 200
-    return response
-#------------------------------------------------------------
+    return jsonify({'message': f'Job posting with ID {PostingID} updated successfully'}), 200
 
-@persona2.route('/persona2/<id>', methods=['GET'])
-def view_student_data (id):
+# Delete a job posting
+@job_posting.route('/JobPosting/<int:PostingID>', methods=['DELETE'])
+def delete_job_posting(PostingID):
+    query = 'DELETE FROM JobPosting WHERE PostingID = %s'
+    cursor = db.get_db().cursor()
+    cursor.execute(query, (PostingID,))
+    db.get_db().commit()
+    return jsonify({'message': f'Job posting with ID {PostingID} deleted successfully'}), 200
 
-    query = f'''SELECT Username,
-                       GPA, 
-                       MajorID, 
-                       AppCount, 
-                       OfferCount, 
-                       NUID
-                        
-                FROM Users 
-                WHERE AdvisorId = {str(id)}
-    '''
-    
-    current_app.logger.info(f'GET /persona2/<id> query={query}')
+########################################################
+# Routes for PostStats
+########################################################
 
+# Get all post stats
+@job_posting.route('/PostStats', methods=['GET'])
+def get_all_post_stats():
+    query = 'SELECT * FROM PostStats'
     cursor = db.get_db().cursor()
     cursor.execute(query)
-    theData = cursor.fetchall()
-    
-    current_app.logger.info(f'GET /persona2/<id> Result of query = {theData}')
-    
-    response = make_response(jsonify(theData))
-    response.status_code = 200
-    return response
+    data = cursor.fetchall()
+    return jsonify(data), 200
 
+# Get post stats by PostingID
+@job_posting.route('/PostStats/Posting/<int:PostingID>', methods=['GET'])
+def get_post_stats_by_posting(PostingID):
+    query = 'SELECT * FROM PostStats WHERE PostingID = %s'
+    cursor = db.get_db().cursor()
+    cursor.execute(query, (PostingID,))
+    data = cursor.fetchall()
+    return jsonify(data), 200
 
+# Add new post stats
+@job_posting.route('/PostStats', methods=['POST'])
+def add_new_post_stats():
+    data = request.json
+    query = '''
+        INSERT INTO PostStats (PostingID, AppAmount, InterviewAmount, OfferAmnt, AcceptAmnt, CallBackNum, MeanResponseTime)
+        VALUES (%s, %s, %s, %s, %s, %s, %s)
+    '''
+    params = (data['PostingID'], data['AppAmount'], data['InterviewAmount'], data['OfferAmnt'], data['AcceptAmnt'], data['CallBackNum'], data['MeanResponseTime'])
+    cursor = db.get_db().cursor()
+    cursor.execute(query, params)
+    db.get_db().commit()
+    return jsonify({'message': 'Post stats added successfully'}), 201
+
+# Update post stats
+@job_posting.route('/PostStats/<int:PostStatID>', methods=['PUT'])
+def update_post_stats(PostStatID):
+    data = request.json
+    query = '''
+        UPDATE PostStats
+        SET AppAmount = %s,
+            InterviewAmount = %s,
+            OfferAmnt = %s,
+            AcceptAmnt = %s,
+            CallBackNum = %s,
+            MeanResponseTime = %s
+        WHERE PostStatID = %s
+    '''
+    params = (data['AppAmount'], data['InterviewAmount'], data['OfferAmnt'], data['AcceptAmnt'], data['CallBackNum'], data['MeanResponseTime'], PostStatID)
+    cursor = db.get_db().cursor()
+    cursor.execute(query, params)
+    db.get_db().commit()
+    return jsonify({'message': f'Post stats with ID {PostStatID} updated successfully'}), 200
+
+# Delete post stats
+@job_posting.route('/PostStats/<int:PostStatID>', methods=['DELETE'])
+def delete_post_stats(PostStatID):
+    query = 'DELETE FROM PostStats WHERE PostStatID = %s'
+    cursor = db.get_db().cursor()
+    cursor.execute(query, (PostStatID,))
+    db.get_db().commit()
+    return jsonify({'message': f'Post stats with ID {PostStatID} deleted successfully'}), 200

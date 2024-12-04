@@ -1,14 +1,19 @@
+########################################################
+# Routes for Position blueprint
+########################################################
+from flask import Blueprint
+from flask import request
+from flask import jsonify
+from flask import make_response
+from flask import current_app
+from backend.db_connection import db
+
 from flask import Blueprint, request, jsonify, make_response, current_app
 from backend.db_connection import db
 
 # Create a new Blueprint object for position-related routes
 position = Blueprint('position', __name__)
 
-########################################################
-# Routes for Position Blueprint
-########################################################
-
-# ------------------------------------------------------------
 # Get positions ordered by yield rate
 @position.route('/Position/PosStats/YieldRate', methods=['GET'])
 def get_positions_by_yield_rate():
