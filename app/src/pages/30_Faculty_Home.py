@@ -9,7 +9,7 @@ st.set_page_config(layout = 'wide')
 
 SideBarLinks()
 
-st.title(f'Welcome Faculty Advisor, {st.session_state['first_name']}.')
+st.title(f"Welcome Faculty Advisor, {st.session_state['first_name']}.")
 
 if st.button('View Student Data',
              type='primary',

@@ -117,15 +117,25 @@ def remove_position(PositionID):
     return jsonify({'message': f'Position with ID {PositionID} deleted successfully.'}), 200
 
 
+@position.route('/PositionReview', methods=['GET'])
 @position.route('/PositionReview/<int:PositionID>', methods=['GET'])
-def get_reviews_by_position(PositionID):
-    query = '''
-        SELECT *
-        FROM PositionReview
-        WHERE PositionID = %s
-    '''
+def get_reviews_by_position(PositionID=None):
+    if PositionID:
+        query = '''
+            SELECT *
+            FROM PositionReview
+            WHERE PositionID = %s
+        '''
+        params = (PositionID,)
+    else:
+        query = '''
+            SELECT *
+            FROM PositionReview
+        '''
+        params = () 
+
     cursor = db.get_db().cursor()
-    cursor.execute(query, (PositionID,))
+    cursor.execute(query, params)
     reviews = cursor.fetchall()
     return jsonify(reviews), 200
 
