@@ -110,4 +110,50 @@ def remove_position(PositionID):
     db.get_db().commit()
     return jsonify({'message': f'Position with ID {PositionID} deleted successfully.'}), 200
 
-# ------------------------------------------------------------
+@position.route('/PositionReview/<int:PositionID>', methods=['GET'])
+def get_reviews_by_position(PositionID):
+    query = '''
+        SELECT *
+        FROM PositionReview
+        WHERE PositionID = %s
+    '''
+    cursor = db.get_db().cursor()
+    cursor.execute(query, (PositionID,))
+    reviews = cursor.fetchall()
+    return jsonify(reviews), 200
+
+# creating a new route for a specific position
+@position.route('/PositionReview/<int:PositionID>', methods=['POST'])
+def add_review(PositionID):
+    data = request.json  # Expecting JSON input
+    query = '''
+        INSERT INTO PositionReview (
+            Description, Offer, ApplicationRating, EnvironmentRating,
+            EducationRating, ProfessionalRating, Applied, AppliedDate,
+            ResponseDate, PositionID
+        )
+        VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
+    '''
+    params = (
+        data['Description'], data['Offer'], data['ApplicationRating'],
+        data['EnvironmentRating'], data['EducationRating'], 
+        data['ProfessionalRating'], data['Applied'], data['AppliedDate'],
+        data['ResponseDate'], PositionID
+    )
+    cursor = db.get_db().cursor()
+    cursor.execute(query, params)
+    db.get_db().commit()
+    return jsonify({'message': 'Review added successfully'}), 201
+
+# deleting reviews
+@position.route('/PositionReview/<int:PosReviewID>', methods=['DELETE'])
+def delete_review(PosReviewID):
+    query = '''
+        DELETE FROM PositionReview
+        WHERE PosReviewID = %s
+    '''
+    cursor = db.get_db().cursor()
+    cursor.execute(query, (PosReviewID,))
+    db.get_db().commit()
+    return jsonify({'message': f'Review with ID {PosReviewID} deleted successfully'}), 200
+
