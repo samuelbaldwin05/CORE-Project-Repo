@@ -157,3 +157,25 @@ def delete_review(PosReviewID):
     db.get_db().commit()
     return jsonify({'message': f'Review with ID {PosReviewID} deleted successfully'}), 200
 
+# position based on major
+@position.route('/positions/related_majors/<int:major_id>', methods=['GET'])
+def get_positions_by_related_majors(major_id):
+    query = '''
+        SELECT DISTINCT 
+            pt.PositionID, pt.PositionName, pt.Description
+        FROM 
+            Majors m
+        INNER JOIN 
+            Users u ON m.MajorID = u.MajorID
+        INNER JOIN 
+            PositionReview pr ON pr.PositionID = u.PositionId
+        INNER JOIN 
+            PositionTable pt ON pt.PositionID = pr.PositionID
+        WHERE 
+            m.MajorID = %s
+    '''
+    cursor = db.get_db().cursor()
+    cursor.execute(query, (major_id,))
+    positions = cursor.fetchall()
+
+    return jsonify(positions), 200
