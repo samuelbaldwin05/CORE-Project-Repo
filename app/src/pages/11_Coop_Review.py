@@ -83,7 +83,8 @@ if choice == 'Took Position':
         appyield = 1
         submit_button = st.form_submit_button(label='Submit')
 
-
+results = requests.get(f'http://api:4000/PostStats').json()
+st.dataframe(results)
 
 # Either a get route that automatically runs to show all co-ops that can be reviewed
 # Or a form that can be filled out then submitted as a put route to enter info into
