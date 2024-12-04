@@ -177,7 +177,6 @@ CREATE TABLE PostStats (
 );
 
 
-
 -- Inserting fake data
 INSERT INTO Location (State, City, CountryCode, Address) VALUES
 ('CA', 'Los Angeles', 'US', '1234 Sunset Blvd'),
@@ -613,7 +612,6 @@ INSERT INTO CompanyReviewers (NUID, ComReviewID) VALUES
 (100008, 40),
 (100009, 1),
 (100010, 6),
-(100011, 11),
 (100012, 16),
 (100013, 21),
 (100014, 26),
@@ -667,7 +665,6 @@ INSERT INTO CompanyReviewers (NUID, ComReviewID) VALUES
 (100022, 10),
 (100023, 15),
 (100024, 20),
-(100025, 25),
 (100026, 30),
 (100027, 35),
 (100028, 40),
@@ -802,9 +799,7 @@ INSERT INTO PosStats (PositionID, YieldRate, AvgAppAmount, AvgInterview, AvgGpa,
 (37, 0.62, 100, 18, 3, 4, 4, '01:00:00'),
 (38, 0.70, 130, 25, 3, 4, 4, '01:30:00'),
 (39, 0.68, 120, 22, 3, 4, 4, '01:15:00'),
-(40, 0.75, 160, 35, 4, 5, 5, '02:00:00'),
-(41, 0.66, 115, 20, 3, 4, 4, '01:10:00'),
-(42, 0.74, 135, 27, 3, 4, 5, '01:40:00');
+(40, 0.75, 160, 35, 4, 5, 5, '02:00:00');
 
 
 INSERT INTO PostStats (PostingID, AppAmount, InterviewAmount, OfferAmnt, AcceptAmnt, CallBackNum, MeanResponseTime) VALUES

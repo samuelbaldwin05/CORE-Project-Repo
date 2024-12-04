@@ -146,7 +146,7 @@ def get_reviews_by_position(PositionID=None):
 
 
 # creating a new route for a specific position
-@position.route('/PositionReview', methods=['POST'])
+@position.route('/PositionReview/post', methods=['POST'])
 def add_review():
     data = request.json  # Expecting JSON input
     query = '''
