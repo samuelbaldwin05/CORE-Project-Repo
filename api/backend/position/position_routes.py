@@ -1,23 +1,14 @@
-########################################################
-# Routes for Position blueprint
-########################################################
-from flask import Blueprint
-from flask import request
-from flask import jsonify
-from flask import make_response
-from flask import current_app
+from flask import Blueprint, request, jsonify, make_response, current_app
 from backend.db_connection import db
-from backend.ml_models.model01 import predict
 
-#------------------------------------------------------------
-# Create a new Blueprint object, which is a collection of 
-# routes.
+# Create a new Blueprint object for position-related routes
 position = Blueprint('position', __name__)
 
-# ------------------------------------------------------------
+########################################################
+# Routes for Position Blueprint
+########################################################
 
 # ------------------------------------------------------------
-
 # Get positions ordered by yield rate
 @position.route('/Position/PosStats/YieldRate', methods=['GET'])
 def get_positions_by_yield_rate():
@@ -28,24 +19,15 @@ def get_positions_by_yield_rate():
         ON pt.position_id = pst.position_id 
         ORDER BY pst.yield_rate
     '''
-    
-    # get a cursor object from the database
     cursor = db.get_db().cursor()
-
-    # use cursor to query the database for positions ordered by yield rate
     cursor.execute(query)
+    data = cursor.fetchall()
+    return jsonify(data), 200
 
-    # fetch all the data from the cursor
-    theData = cursor.fetchall()
-
-    # Create a HTTP Response object and add results of the query to it after "jsonify"-ing it.
-    response = make_response(jsonify(theData))
-    response.status_code = 200
-    return response
-
-# fetch data based upon learning percent
+# ------------------------------------------------------------
+# Get positions ordered by average learning percentage
 @position.route('/Position/PosStats/Learning', methods=['GET'])
-def get_positions_by_yield_rate():
+def get_positions_by_learning():
     query = '''
         SELECT pt.*, pst.AvgLearning 
         FROM positiontable pt 
@@ -53,101 +35,50 @@ def get_positions_by_yield_rate():
         ON pt.position_id = pst.position_id 
         ORDER BY pst.AvgLearning
     '''
-    
-    # get a cursor object from the database
     cursor = db.get_db().cursor()
-
-    # use cursor to query the database for positions ordered by yield rate
     cursor.execute(query)
+    data = cursor.fetchall()
+    return jsonify(data), 200
 
-    # fetch all the data from the cursor
-    theData = cursor.fetchall()
-
-    # Create a HTTP Response object and add results of the query to it after "jsonify"-ing it.
-    response = make_response(jsonify(theData))
-    response.status_code = 200
-    return response
-
-# fetch data based upon GPA
-@position.route('/Position/PosStats/<gpa>', methods=['GET'])
-def get_positions_by_yield_rate(gpa):
-    query = f'''
+# ------------------------------------------------------------
+# Get positions filtered by GPA
+@position.route('/Position/PosStats/<int:gpa>', methods=['GET'])
+def get_positions_by_gpa(gpa):
+    query = '''
         SELECT pt.*, pst.AvgGpa
         FROM positiontable pt 
         JOIN positionstatstable pst 
         ON pt.position_id = pst.position_id 
-        WHERE pst.AvgGpa == {int(gpa)}
+        WHERE pst.AvgGpa = %s
         ORDER BY pst.AvgGpa
     '''
-    
-    # get a cursor object from the database
     cursor = db.get_db().cursor()
+    cursor.execute(query, (gpa,))
+    data = cursor.fetchall()
+    return jsonify(data), 200
 
-    # use cursor to query the database for positions ordered by yield rate
-    cursor.execute(query)
-
-    # fetch all the data from the cursor
-    theData = cursor.fetchall()
-
-    # Create a HTTP Response object and add results of the query to it after "jsonify"-ing it.
-    response = make_response(jsonify(theData))
-    response.status_code = 200
-    return response
-
+# ------------------------------------------------------------
+# Add a new position to the PositionTable
 @position.route('/position', methods=['POST'])
-def add_new_product():
-    #collecting the data 
-    the_data = request.json
-    current_app.logger.info(the_data)
+def add_new_position():
+    data = request.json
+    current_app.logger.info(data)
 
-    
-    #extracting the variable
-    name = the_data['PositionName']
-    description = the_data['Description']
-    skills = the_data['Skills']
-    Environment = skills = the_data['Enviroment']
-    questions = the_data['AdditionalQuestions']
-    CoverLetter = the_data['CoverLetter']
-    
-    query = f'''
-        INSERT INTO products (PositionName,
-                              Description,
-                              Skills,
-                              Environment, 
-                              AdditionalQuestions,
-                              CoverLetter)
-        VALUES ('{name}', '{description}', '{skills}', '{Environment}', '{questions}', '{CoverLetter}')
+    query = '''
+        INSERT INTO PositionTable (PositionName, Description, Skills, Environment, AdditionalQuestions, CoverLetter)
+        VALUES (%s, %s, %s, %s, %s, %s)
     '''
-
-    current_app.logger.info(query)
-
-    # executing and committing the insert statement 
+    params = (data['PositionName'], data['Description'], data['Skills'], data['Environment'], data['AdditionalQuestions'], data['CoverLetter'])
     cursor = db.get_db().cursor()
-    cursor.execute(query)
+    cursor.execute(query, params)
     db.get_db().commit()
-    
-    response = make_response("Successfully added product")
-    response.status_code = 200
-    return response
+    return jsonify({'message': 'Position added successfully'}), 201
 
-    ------------------------------------------------------------
-# Update customer info for customer with particular userID
-#   Notice the manner of constructing the query.
-@position.route('/posstats/<PositionID>', methods=['PUT'])
+# ------------------------------------------------------------
+# Update position stats for a specific PositionID
+@position.route('/posstats/<int:PositionID>', methods=['PUT'])
 def update_posstats(PositionID):
-    current_app.logger.info('PUT /posstats route')
-    
-    # Get the JSON request payload
-    stats_info = request.json
-    position_id = PositionID
-    app_count = stats_info['AppCount']
-    interview_amount = stats_info['InterviewAmount']
-    offer_amount = stats_info['OfferAmount']
-    acceptance_amount = stats_info['AcceptanceAmount']
-    callback_amount = stats_info['CallbackAmount']
-    avg_response_time = stats_info['AvgResponseTime']
-    
-    # SQL query to update the PosStats table
+    data = request.json
     query = '''
         UPDATE PosStats
         SET AppCount = %s,
@@ -158,33 +89,20 @@ def update_posstats(PositionID):
             AvgResponseTime = %s
         WHERE PositionID = %s
     '''
-    
-    # Data tuple for query execution
-    data = (app_count, interview_amount, offer_amount, acceptance_amount, callback_amount, avg_response_time, position_id)
-    
-    # Execute the query
+    params = (data['AppCount'], data['InterviewAmount'], data['OfferAmount'], data['AcceptanceAmount'], data['CallbackAmount'], data['AvgResponseTime'], PositionID)
     cursor = db.get_db().cursor()
-    r = cursor.execute(query, data)
+    cursor.execute(query, params)
     db.get_db().commit()
-    return 
-@position.route('/position/Remove/<PositionID>', methods=['DELETE'])
-def remove_user(PositionID):
-    query = f'''
-        DELETE *
-        FROM PositionTable
-        WHERE PositionID = {PositionID}
-    '''
-    
-    current_app.logger.info(f'DELETE /position/remove/<PositionID> query={query}')
-    
-    cursor = db.get_db().cursor()
-    cursor.execute(query)
-    db.get_db().commit()
-    
-    current_app.logger.info(f'DELETE /postion/Remove/<PositionID> postiontable with ={PositionID} deleted')
-    
-    response = make_response(jsonify({'message': f'postiontable with ={PositionID} deleted'}))
-    response.status_code = 200
-    return response
-    
+    return jsonify({'message': f'Position stats for PositionID {PositionID} updated successfully.'}), 200
 
+# ------------------------------------------------------------
+# Remove a position from the PositionTable
+@position.route('/position/Remove/<int:PositionID>', methods=['DELETE'])
+def remove_position(PositionID):
+    query = 'DELETE FROM PositionTable WHERE PositionID = %s'
+    cursor = db.get_db().cursor()
+    cursor.execute(query, (PositionID,))
+    db.get_db().commit()
+    return jsonify({'message': f'Position with ID {PositionID} deleted successfully.'}), 200
+
+# ------------------------------------------------------------
