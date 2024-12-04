@@ -164,5 +164,65 @@ def remove_user(nuid):
 
 # ------------------------------------------------------------
 
+# GET Route for Persona 3, retrieves all reviews written by a given user
 
+@users.route('/users/<nuid>/reviews', methods=['GET'])
+def get_user_reviews(nuid):
 
+    position_reviews_query = f'''
+        SELECT pr.PosReviewID, 
+               pt.PositionName, 
+               pr.EnvironmentRating
+        FROM PositionReviewers prr
+        JOIN PositionReview pr ON prr.PosReviewID = pr.PosReviewID
+        JOIN PositionTable pt ON pr.PositionID = pt.PositionID
+        WHERE prr.NUID = {str(nuid)}
+    '''
+    
+    company_reviews_query = f'''
+        SELECT cr.ComReviewID, 
+               c.Name AS CompanyName, 
+               cr.EnvironmentRating
+        FROM CompanyReviewers crr
+        JOIN CompanyReview cr ON crr.ComReviewID = cr.ComReviewID
+        JOIN Company c ON cr.CompanyId = c.CompanyID
+        WHERE crr.NUID = {str(nuid)}
+    '''
+
+    current_app.logger.info(f'GET /users/<nuid>/reviews Position Reviews Query: {position_reviews_query}')
+    current_app.logger.info(f'GET /users/<nuid>/reviews Company Reviews Query: {company_reviews_query}')
+    
+    cursor = db.get_db().cursor()
+    cursor.execute(position_reviews_query)
+    position_reviews = cursor.fetchall()
+    
+    cursor.execute(company_reviews_query)
+    company_reviews = cursor.fetchall()
+    
+    current_app.logger.info(f'GET /users/<nuid>/reviews Position Reviews Result: {position_reviews}')
+    current_app.logger.info(f'GET /users/<nuid>/reviews Company Reviews Result: {company_reviews}')
+    
+    response_data = {
+        "position_reviews": [
+            {
+                "review_id": row[0], 
+                "position_name": row[1], 
+                "environment_rating": row[2]
+            }
+            for row in position_reviews
+        ],
+        "company_reviews": [
+            {
+                "review_id": row[0], 
+                "company_name": row[1], 
+                "environment_rating": row[2]
+            }
+            for row in company_reviews
+        ]
+    }
+    
+    response = make_response(jsonify(response_data))
+    response.status_code = 200
+    return response
+
+# ------------------------------------------------------------
