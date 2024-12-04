@@ -15,3 +15,28 @@ from backend.ml_models.model01 import predict
 company = Blueprint('company', __name__)
 
 #------------------------------------------------------------
+
+# Get companies ordered by average culture rating
+@company.route('/Company/CultureRating', methods=['GET'])
+def get_companies_by_culture_rating():
+    query = '''
+        SELECT c.company_id, c.company_name, AVG(cr.culture_rating) AS avg_culture_rating
+        FROM company c
+        JOIN company_review cr ON c.company_id = cr.company_id
+        GROUP BY c.company_id, c.company_name
+        ORDER BY avg_culture_rating DESC
+    '''
+    
+    # get a cursor object from the database
+    cursor = db.get_db().cursor()
+
+    # use cursor to query the database for companies ordered by average culture rating
+    cursor.execute(query)
+
+    # fetch all the data from the cursor
+    theData = cursor.fetchall()
+
+    # Create a HTTP Response object and add results of the query to it after "jsonify"-ing it.
+    response = make_response(jsonify(theData))
+    response.status_code = 200
+    return response
