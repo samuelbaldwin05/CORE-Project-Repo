@@ -50,7 +50,7 @@ if choice == 'Offered Job':
         submit_button = st.form_submit_button(label='Submit')
 
 if choice == 'Took Position':
-    with st.form(key='OfferForm'):
+    with st.form(key='PosWorkForm'):
         difficulty = st.number_input('Application Difficulty Rating (1-5)', 1, 5)
         data_applied = st.date_input('Date of Application')
         date_results = st.date_input('Date of Results')
@@ -62,6 +62,8 @@ if choice == 'Took Position':
         review = st.text_input('Review Space')
         appyield = 1
         submit_button = st.form_submit_button(label='Submit')
+
+
 
 # Either a get route that automatically runs to show all co-ops that can be reviewed
 # Or a form that can be filled out then submitted as a put route to enter info into
