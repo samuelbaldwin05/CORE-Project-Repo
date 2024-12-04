@@ -84,7 +84,6 @@ CREATE TABLE PositionTable (
     Skills VARCHAR(300),
     Environment VARCHAR(20),
     AdditionalQuestions BOOL,
-    PosReviewID INT,
     CoverLetter BOOL,
     PostingID INT NOT NULL,
     CONSTRAINT PJP FOREIGN KEY (PostingID)
