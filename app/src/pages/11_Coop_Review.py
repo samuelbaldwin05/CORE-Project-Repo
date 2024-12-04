@@ -11,6 +11,57 @@ st.set_page_config(layout = 'wide')
 SideBarLinks()
 
 st.title('Review a Coop')
+menu = ['Rejected', 'Interview Stage', 'Offered Job', 'Took Position']
+choice = st.selectbox("Stage Reached", menu)
+
+
+if choice == 'Rejected':
+    st.subheader("Position Form")
+    with st.form(key='RejectForm'):
+        difficulty = st.number_input('Application Difficulty Rating (1-5)', 1, 5)
+        data_applied = st.date_input('Date of Application')
+        date_results = st.date_input('Date of Results')
+        gpa = st.number_input('GPA')
+        review = st.text_input('Review Space')
+        appyield = 0
+        interviewnum = 0
+        submit_button = st.form_submit_button(label='Submit')
+
+if choice == 'Interview Stage':
+    with st.form(key='IntForm'):
+        difficulty = st.number_input('Application Difficulty Rating (1-5)', 1, 5)
+        data_applied = st.date_input('Date of Application')
+        date_results = st.date_input('Date of Results')
+        gpa = st.number_input('GPA')
+        interviewnum = st.number_input('Number of Interviews Had')
+        review = st.text_input('Review Space')
+        appyield = 0
+        submit_button = st.form_submit_button(label='Submit')
+
+if choice == 'Offered Job':
+     with st.form(key='OfferForm'):
+        difficulty = st.number_input('Application Difficulty Rating (1-5)', 1, 5)
+        data_applied = st.date_input('Date of Application')
+        date_results = st.date_input('Date of Results')
+        gpa = st.number_input('GPA')
+        interviewnum = st.number_input('Number of Interviews Had')
+        review = st.text_input('Review Space')
+        appyield = 1
+        submit_button = st.form_submit_button(label='Submit')
+
+if choice == 'Took Position':
+    with st.form(key='OfferForm'):
+        difficulty = st.number_input('Application Difficulty Rating (1-5)', 1, 5)
+        data_applied = st.date_input('Date of Application')
+        date_results = st.date_input('Date of Results')
+        gpa = st.number_input('GPA')
+        interviewnum = st.number_input('Number of Interviews Had')
+        env_rating = st.number_input('Rating of Environment While Working (1-5)', 1, 5)
+        education_rating = st.number_input('Rating of Education Received While Working (1-5)', 1, 5)
+        professionality_rating = st.number_input('Overall Enjoyment of Position (1-5)', 1, 5)
+        review = st.text_input('Review Space')
+        appyield = 1
+        submit_button = st.form_submit_button(label='Submit')
 
 # Either a get route that automatically runs to show all co-ops that can be reviewed
 # Or a form that can be filled out then submitted as a put route to enter info into

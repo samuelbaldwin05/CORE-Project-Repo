@@ -14,6 +14,7 @@ from backend.db_connection import db
 # Create a new Blueprint object for position-related routes
 position = Blueprint('position', __name__)
 
+
 # Get positions ordered by yield rate
 @position.route('/Position/PosStats/YieldRate', methods=['GET'])
 def get_positions_by_yield_rate():
@@ -28,6 +29,7 @@ def get_positions_by_yield_rate():
     cursor.execute(query)
     data = cursor.fetchall()
     return jsonify(data), 200
+
 
 # ------------------------------------------------------------
 # Get positions ordered by average learning percentage
@@ -44,6 +46,7 @@ def get_positions_by_learning():
     cursor.execute(query)
     data = cursor.fetchall()
     return jsonify(data), 200
+
 
 # ------------------------------------------------------------
 # Get positions filtered by GPA
@@ -62,6 +65,7 @@ def get_positions_by_gpa(gpa):
     data = cursor.fetchall()
     return jsonify(data), 200
 
+
 # ------------------------------------------------------------
 # Add a new position to the PositionTable
 @position.route('/position', methods=['POST'])
@@ -78,6 +82,7 @@ def add_new_position():
     cursor.execute(query, params)
     db.get_db().commit()
     return jsonify({'message': 'Position added successfully'}), 201
+
 
 # ------------------------------------------------------------
 # Update position stats for a specific PositionID
@@ -100,6 +105,7 @@ def update_posstats(PositionID):
     db.get_db().commit()
     return jsonify({'message': f'Position stats for PositionID {PositionID} updated successfully.'}), 200
 
+
 # ------------------------------------------------------------
 # Remove a position from the PositionTable
 @position.route('/position/Remove/<int:PositionID>', methods=['DELETE'])
@@ -109,6 +115,7 @@ def remove_position(PositionID):
     cursor.execute(query, (PositionID,))
     db.get_db().commit()
     return jsonify({'message': f'Position with ID {PositionID} deleted successfully.'}), 200
+
 
 @position.route('/PositionReview/<int:PositionID>', methods=['GET'])
 def get_reviews_by_position(PositionID):
@@ -122,6 +129,7 @@ def get_reviews_by_position(PositionID):
     reviews = cursor.fetchall()
     return jsonify(reviews), 200
 
+
 # creating a new route for a specific position
 @position.route('/PositionReview/<int:PositionID>', methods=['POST'])
 def add_review(PositionID):
@@ -129,7 +137,7 @@ def add_review(PositionID):
     query = '''
         INSERT INTO PositionReview (
             Description, Offer, ApplicationRating, EnvironmentRating,
-            EducationRating, ProfessionalRating, Applied, AppliedDate,
+            EducationRating, EnjoymentRating, Applied, AppliedDate,
             ResponseDate, PositionID
         )
         VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
@@ -137,13 +145,14 @@ def add_review(PositionID):
     params = (
         data['Description'], data['Offer'], data['ApplicationRating'],
         data['EnvironmentRating'], data['EducationRating'], 
-        data['ProfessionalRating'], data['Applied'], data['AppliedDate'],
+        data['EnjoymentRating'], data['Applied'], data['AppliedDate'],
         data['ResponseDate'], PositionID
     )
     cursor = db.get_db().cursor()
     cursor.execute(query, params)
     db.get_db().commit()
     return jsonify({'message': 'Review added successfully'}), 201
+
 
 # deleting reviews
 @position.route('/PositionReview/<int:PosReviewID>', methods=['DELETE'])
@@ -156,6 +165,7 @@ def delete_review(PosReviewID):
     cursor.execute(query, (PosReviewID,))
     db.get_db().commit()
     return jsonify({'message': f'Review with ID {PosReviewID} deleted successfully'}), 200
+
 
 # position based on major
 @position.route('/positions/related_majors/<int:major_id>', methods=['GET'])
