@@ -11,6 +11,25 @@ st.set_page_config(layout = 'wide')
 # Display the appropriate sidebar links for the role of the logged in user
 SideBarLinks()
 
+
+def fetch_data(position_id=None):
+    if position_id:
+        url = f'http://localhost:4000/PositionReview/{position_id}'  # Replace with your actual API base URL
+    else:
+        url = 'http://localhost:4000/PositionReview'  # Endpoint for all reviews
+    try:
+        response = requests.get(url)
+        response.raise_for_status()  # Raise an error for bad responses (4xx/5xx)
+        data = response.json()
+        return pd.DataFrame(data)  # Convert to DataFrame for easy manipulation
+    except requests.exceptions.RequestException as e:
+        logger.error(f"Error fetching data: {e}")
+        st.error("Failed to fetch data. Please check the server.")
+        return pd.DataFrame()  # Return an empty DataFrame on error
+    
+    
+
+
 st.title('Review a Coop')
 menu = ['Rejected', 'Interview Stage', 'Offered Job', 'Took Position']
 choice = st.selectbox("Stage Reached", menu)
