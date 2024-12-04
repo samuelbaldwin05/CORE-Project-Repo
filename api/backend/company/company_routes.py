@@ -40,3 +40,48 @@ def get_companies_by_culture_rating():
     response = make_response(jsonify(theData))
     response.status_code = 200
     return response
+
+# Get companies by industry
+@company.route('/Company/<Industry>', methods=['GET'])
+def get_companies_by_industry(Industry):
+    query = f'''
+        SELECT * FROM company
+        WHERE industry = '{Industry}'
+    '''
+    
+    # get a cursor object from the database
+    cursor = db.get_db().cursor()
+
+    # use cursor to query the database for companies by industry
+    cursor.execute(query)
+
+    # fetch all the data from the cursor
+    theData = cursor.fetchall()
+
+    # Create a HTTP Response object and add results of the query to it after "jsonify"-ing it.
+    response = make_response(jsonify(theData))
+    response.status_code = 200
+
+# Get companies by city
+@company.route('/Company/Location/<City>', methods=['GET'])
+def get_companies_by_city(City):
+    query = f'''
+        SELECT c.*
+        FROM company c
+        JOIN location l ON c.locationid = l.locationid
+        WHERE l.city = '{City}'
+    '''
+    
+    # get a cursor object from the database
+    cursor = db.get_db().cursor()
+
+    # use cursor to query the database for companies by city
+    cursor.execute(query)
+
+    # fetch all the data from the cursor
+    theData = cursor.fetchall()
+
+    # Create a HTTP Response object and add results of the query to it after "jsonify"-ing it.
+    response = make_response(jsonify(theData))
+    response.status_code = 200
+    return response
