@@ -118,21 +118,26 @@ def remove_position(PositionID):
 
 
 @position.route('/PositionReview', methods=['GET'])
+def get_reviews_by_position(PositionID=None):
+    query = '''
+            SELECT *
+            FROM PositionReview
+        '''
+    params = (PositionID,)
+    cursor = db.get_db().cursor()
+    cursor.execute(query, params)
+    reviews = cursor.fetchall()
+    return jsonify(reviews), 200
+
 @position.route('/PositionReview/<int:PositionID>', methods=['GET'])
 def get_reviews_by_position(PositionID=None):
-    if PositionID:
-        query = '''
+    query = '''
             SELECT *
             FROM PositionReview
             WHERE PositionID = %s
         '''
-        params = (PositionID,)
-    else:
-        query = '''
-            SELECT *
-            FROM PositionReview
-        '''
-        params = () 
+    params = (PositionID,)
+
 
     cursor = db.get_db().cursor()
     cursor.execute(query, params)
