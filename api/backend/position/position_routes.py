@@ -118,7 +118,7 @@ def remove_position(PositionID):
 
 
 @position.route('/PositionReview', methods=['GET'])
-def get_reviews_by_position(PositionID=None):
+def get_posreviews(PositionID=None):
     query = '''
             SELECT *
             FROM PositionReview
