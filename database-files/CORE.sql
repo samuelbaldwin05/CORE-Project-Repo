@@ -50,7 +50,6 @@ CREATE TABLE Majors (
 -- Step 3: Tables with Foreign Keys to Tables in Step 2
 CREATE TABLE Users (
     NUID INTEGER NOT NULL PRIMARY KEY UNIQUE,
-    PositionId INT,
     Username VARCHAR(100) UNIQUE,
     MajorID INT,
     GPA FLOAT,
@@ -127,10 +126,10 @@ CREATE TABLE PositionReviewers (
 CREATE TABLE CompanyReview (
     ComReviewID INTEGER AUTO_INCREMENT NOT NULL PRIMARY KEY,
     CompanyId INT NOT NULL,
-    Type VARCHAR(50),
-    Description VARCHAR(255),
-    EnvironmentRating TINYINT(1),
-    CultureRating TINYINT(1),
+    Type VARCHAR(200),
+    Description VARCHAR(500),
+    EnvironmentRating TINYINT(5),
+    CultureRating TINYINT(5),
     CONSTRAINT CRC FOREIGN KEY (CompanyId)
         REFERENCES Company(CompanyID)
         ON UPDATE cascade ON DELETE RESTRICT
@@ -176,4 +175,5 @@ CREATE TABLE PostStats (
         REFERENCES JobPosting(PostingID)
         ON UPDATE cascade ON DELETE restrict
 );
+
 
