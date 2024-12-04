@@ -67,15 +67,6 @@ CREATE TABLE Users (
 );
 
 -- Step 4: Tables with Foreign Keys to Tables in Step 3
-CREATE TABLE JobPosting (
-    PostingID INTEGER AUTO_INCREMENT NOT NULL PRIMARY KEY,
-    CompanyID INTEGER,
-    DatePosted DATETIME,
-    Status BOOL,
-    CONSTRAINT JPC FOREIGN KEY (CompanyID)
-        REFERENCES Company(CompanyID)
-        ON UPDATE cascade ON DELETE restrict
-);
 
 CREATE TABLE PositionTable (
     PositionID INTEGER AUTO_INCREMENT NOT NULL PRIMARY KEY,
@@ -85,10 +76,20 @@ CREATE TABLE PositionTable (
     Environment VARCHAR(20),
     AdditionalQuestions BOOL,
     CoverLetter BOOL,
-    PostingID INT NOT NULL,
-    CONSTRAINT PJP FOREIGN KEY (PostingID)
-        REFERENCES JobPosting(PostingID)
+);
+
+CREATE TABLE JobPosting (
+    PostingID INTEGER AUTO_INCREMENT NOT NULL PRIMARY KEY,
+    CompanyID INTEGER,
+    DatePosted DATETIME,
+    Status BOOL,
+    PositionID INT NOT NULL,
+    CONSTRAINT PJP FOREIGN KEY (PositionID)
+        REFERENCES PositionTable(PositionID)
         ON UPDATE cascade ON DELETE cascade
+    CONSTRAINT JPC FOREIGN KEY (CompanyID)
+        REFERENCES Company(CompanyID)
+        ON UPDATE cascade ON DELETE restrict
 );
 
 -- Step 5: Tables with Foreign Keys to Tables in Step 4
