@@ -95,12 +95,12 @@ CREATE TABLE JobPosting (
 -- Step 5: Tables with Foreign Keys to Tables in Step 4
 CREATE TABLE PositionReview (
     PosReviewID INTEGER AUTO_INCREMENT NOT NULL PRIMARY KEY,
-    Description VARCHAR(255),
+    Description VARCHAR(500),
     Offer BOOL,
     ApplicationRating TINYINT(5),
     EnvironmentRating TINYINT(5),
     EducationRating TINYINT(5),
-    ProfessionalRating TINYINT(5),
+    EnjoymentRating TINYINT(5),
     Applied BOOL,
     AppliedDate DATETIME,
     ResponseDate DATETIME,
