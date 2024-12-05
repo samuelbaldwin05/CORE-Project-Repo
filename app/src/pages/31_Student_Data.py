@@ -16,19 +16,16 @@ st.title('View Student Data')
 
 def fetch_data(position_id=None):
     if position_id:
-        url = f'http://api:4000/position/PositionReview/{position_id}'
+        url = f'http://localhost:4000/p/PositionReview{position_id}'
     else:
-        url = 'http://api:4000/position/PositionReview'
-
-    try:
-        response = requests.get(url)
-        response.raise_for_status()  
-        data = response.json()
-        return pd.DataFrame(data)  # Dataframe to make graph easier
-    except requests.exceptions.RequestException as e:
-        logger.error(f"Error fetching data: {e}")
-        st.error("Failed to fetch data. Please check the server.")
-        return pd.DataFrame()  # Empty dataframe if error
+        url = 'http://localhost:4000/p/PositionReview'
+    response = requests.get(url) 
+    data = response.json()
+    return pd.DataFrame(data)  # Dataframe to make graph easier
+    #except requests.exceptions.RequestException as e:
+       # logger.error(f"Error fetching data: {e}")
+       # st.error("Failed to fetch data. Please check the server.")
+       #return pd.DataFrame()  # Empty dataframe if error
 
 
 # Input PositionID
@@ -39,6 +36,7 @@ position_id_input = st.text_input("Enter Position ID")
 
 position_id = int(position_id_input) if position_id_input.isdigit() else None
 df = fetch_data(position_id)
+st.write(df)
 
 # Dropdown to select acceptance rate filter
 graph = st.selectbox("Select Application Metric", ["Total Accepted", "Acceptance Rate", "Total Applied"])
