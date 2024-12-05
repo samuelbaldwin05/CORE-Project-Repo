@@ -127,13 +127,19 @@ def remove_position(PositionID):
 def get_posreviews():
     query = '''
             SELECT *
-            FROM PositionReview
+            FROM PositionReview pr
+            LEFT JOIN PositionReviewers prr ON pr.PosReviewID = prr.PosReviewID
+            LEFT JOIN Users u ON prr.NUID = u.NUID;
         '''
     cursor = db.get_db().cursor()
     cursor.execute(query)
     reviews = cursor.fetchall()
     return jsonify(reviews), 200
 
+# BREAK INTO MULTIPLE ROUTES - first route gets PositionID from PositionName, 
+# second connects PositionID to PositionStats
+# third connects PositionID to PositionReviews
+# beneficial as it allows search by company to use same routes
 @position.route('/positions/info', methods=['GET'])
 def get_posinfo():
     query = '''
@@ -173,7 +179,6 @@ def get_reviews_by_position(PositionID=None):
     cursor.execute(query, params)
     reviews = cursor.fetchall()
     return jsonify(reviews), 200
-
 
 # creating a new route for a specific position
 @position.route('/PositionReview/post', methods=['POST'])

@@ -26,6 +26,8 @@ def fetch_data():
     data = response.json()
     return pd.DataFrame(data)
 
+# Maybe a drop down bar which allows you to search by position, industry, or company
+# Dont need a home page then
 
 df = fetch_data()
 
