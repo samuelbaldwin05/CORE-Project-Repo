@@ -26,19 +26,12 @@ def get_companies_by_culture_rating():
         GROUP BY c.company_id, c.company_name
         ORDER BY avg_culture_rating DESC
     '''
-    
-    # get a cursor object from the database
     cursor = db.get_db().cursor()
-
-    # use cursor to query the database for companies ordered by average culture rating
     cursor.execute(query)
-
-    # fetch all the data from the cursor
     theData = cursor.fetchall()
-
-    # Create a HTTP Response object and add results of the query to it after "jsonify"-ing it.
     response = make_response(jsonify(theData))
     response.status_code = 200
+    
     return response
 
 # Get companies by industry
@@ -48,17 +41,9 @@ def get_companies_by_industry(Industry):
         SELECT * FROM company
         WHERE industry = '{Industry}'
     '''
-    
-    # get a cursor object from the database
     cursor = db.get_db().cursor()
-
-    # use cursor to query the database for companies by industry
     cursor.execute(query)
-
-    # fetch all the data from the cursor
     theData = cursor.fetchall()
-
-    # Create a HTTP Response object and add results of the query to it after "jsonify"-ing it.
     response = make_response(jsonify(theData))
     response.status_code = 200
 
@@ -72,18 +57,12 @@ def get_companies_by_city(City):
         WHERE l.city = '{City}'
     '''
     
-    # get a cursor object from the database
     cursor = db.get_db().cursor()
-
-    # use cursor to query the database for companies by city
     cursor.execute(query)
-
-    # fetch all the data from the cursor
     theData = cursor.fetchall()
-
-    # Create a HTTP Response object and add results of the query to it after "jsonify"-ing it.
     response = make_response(jsonify(theData))
     response.status_code = 200
+    
     return response
 
 
@@ -94,19 +73,12 @@ def get_all_companies():
         SELECT *
         FROM Company
     '''
-    
-    # get a cursor object from the database
     cursor = db.get_db().cursor()
-
-    # use cursor to query the database for companies by city
     cursor.execute(query)
-
-    # fetch all the data from the cursor
     theData = cursor.fetchall()
-
-    # Create a HTTP Response object and add results of the query to it after "jsonify"-ing it.
     response = make_response(jsonify(theData))
     response.status_code = 200
+    
     return response
 
 # Create new company review
@@ -127,23 +99,23 @@ def add_com_review():
     cursor = db.get_db().cursor()
     cursor.execute(query, params)
     db.get_db().commit()
+    
     return jsonify({'message': 'Review added successfully'}), 200
 
-
+# Update company name
 @company.route('/Company/int<CompanyID>', methods=['PUT'])
 def update_company_name(CompanyID):
     data = request.json
-
     query = '''
         UPDATE Company
         SET Name = %s
         WHERE CompanyID = %s
     '''
     params = (data['Name'], CompanyID)
-
     cursor = db.get_db().cursor()
     cursor.execute(query, params)
     db.get_db().commit()
+    
     return jsonify({'message': f'Company name for CompanyID {CompanyID} updated successfully.'}), 200
 
 
@@ -153,29 +125,19 @@ def get_company_reviews(CompanyID):
     query = f'''
         SELECT * FROM company_review WHERE company_id = {CompanyID}
     '''
-    
-    # get a cursor object from the database
     cursor = db.get_db().cursor()
-
-    # use cursor to query the database for reviews
     cursor.execute(query)
-
-    # fetch all the data from the cursor
     theData = cursor.fetchall()
-
-    # Create a HTTP Response object and add results of the query to it after "jsonify"-ing it.
     response = make_response(jsonify(theData))
     response.status_code = 200
+    
     return response
 
 # Add a new review for a company
 @company.route('/CompanyReview/<CompanyID>', methods=['POST'])
 def add_company_review(CompanyID):
-    # In a POST request, there is collecting data from the request object 
     the_data = request.json
     current_app.logger.info(the_data)
-
-    # extracting the variables
     review_type = the_data['Type']
     description = the_data['Description']
     environment_rating = the_data['EnvironmentRating']
@@ -186,14 +148,12 @@ def add_company_review(CompanyID):
         VALUES ({CompanyID}, '{review_type}', '{description}', {environment_rating}, {culture_rating})
     '''
     current_app.logger.info(query)
-
-    # executing and committing the insert statement 
     cursor = db.get_db().cursor()
     cursor.execute(query)
-    db.get_db().commit()
-    
+    db.get_db().commit()  
     response = make_response("Successfully added review")
     response.status_code = 200
+    
     return response
 
 # Delete a review by ComReviewID
@@ -203,12 +163,10 @@ def delete_company_review(ComReviewID):
         DELETE FROM company_review WHERE com_review_id = {ComReviewID}
     '''
     current_app.logger.info(query)
-
-    # executing and committing the delete statement 
     cursor = db.get_db().cursor()
     cursor.execute(query)
     db.get_db().commit()
-    
     response = make_response("Successfully deleted review")
     response.status_code = 200
+    
     return response
