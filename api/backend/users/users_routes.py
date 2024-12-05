@@ -116,19 +116,17 @@ def update_user_gpa(NUID):
 
 # ------------------------------------------------------------
 
-# POST Route for Persona 4, allows system administrator insert new user
+# POST Route for Persona 4, allows advisor to insert new student they are advising
 
-@users.route('/users/add_user', methods=['POST'])
-def add_new_user():
+@users.route('/users/add_user/<int:advisorid>', methods=['POST'])
+def add_new_user(AdvisorID):
     
     the_data = request.get_json()
     current_app.logger.info(the_data)
-
-
     username = the_data['username']
     major_id = the_data['major_id']
     gpa = the_data['gpa']
-    advisor_id = the_data['advisor_id']
+    advisor_id = AdvisorID
     app_count = the_data.get('app_count', 0)  
     offer_count = the_data.get('offer_count', 0)  
     previous_count = the_data.get('previous_count', 0)  
@@ -231,30 +229,21 @@ def get_user_reviews(nuid):
 
 # ------------------------------------------------------------
 
-# ------------------------------------------------------------
-
 # PUT Route for Cammy, allows advisor to update Users GPA
 
-@users.route('/users/update/<int:nuid>', methods=['PUT'])
-def update_user_data(nuid):
+@users.route('/user/add', methods=['POST'])
+def add_new_position():
     data = request.json
+    current_app.logger.info(data)
+
     query = '''
-        UPDATE Users
-        SET Username = %s,
-            MajorID = %s,
-            GPA = %s,
-            AdvisorId = %s,
-            AppCount = %s,
-            OfferCount = %s,
-            PreviousCount = %s
-        WHERE NUID = %s
+        INSERT INTO Users (NUID, Username, MajorID, GPA, AdvisorId, AppCount, OfferCount, PreviousCount)
+        VALUES (%s, %s, %s, %s, %s, %s, %s, %s)
     '''
-    params = (
-        data['Username'], data['MajorID'], data['GPA'],
-        data['AdvisorId'], data['AppCount'], data['OfferCount'],
-        data['PreviousCount'], nuid
-    )
+    params = (data['NUID'], data['Username'], data['MajorID'], data['GPA'],
+               data['AdvisorId'], data['AppCount'], data['OfferCount'], data['PreviousCount'])
+    
     cursor = db.get_db().cursor()
     cursor.execute(query, params)
     db.get_db().commit()
-    return jsonify({'message': f'User data for NUID {nuid} updated successfully.'}), 200
+    return jsonify({'message': 'User added successfully'}), 200
