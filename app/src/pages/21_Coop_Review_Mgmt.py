@@ -4,7 +4,7 @@ import streamlit as st
 from modules.nav import SideBarLinks
 import requests
 
-st.set_page_config(layout = 'wide')
+st.set_page_config(layout = 'wide', page_title = 'User Management', page_icon = 'static/core-4.png')
 
 SideBarLinks()
 

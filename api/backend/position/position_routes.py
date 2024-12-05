@@ -128,6 +128,31 @@ def get_posreviews():
     reviews = cursor.fetchall()
     return jsonify(reviews), 200
 
+@position.route('/positions/info', methods=['GET'])
+def get_posinfo():
+    query = '''
+            SELECT ps.YieldRate, ps.AvgAppAmount, ps.AvgInterview,
+                ps.AvgEnvironment,  ps.AvgGpa, ps.AvgLearning,
+
+                pr.Description AS PositionReview, pr.ResponseDate,
+                pr.Offer, pr.ApplicationRating, pr.EnvironmentRating, pr.EducationRating,
+                pr.EnjoymentRating, pr.Applied, pr.AppliedDate,
+
+                pt.PositionID, pt.PositionName, pt.Description AS PositionDescription,
+
+                u.Username
+
+            FROM PositionTable pt
+            LEFT JOIN PosStats ps ON pt.PositionID = ps.PositionID
+            LEFT JOIN PositionReview pr ON pt.PositionID = pr.PositionID
+            LEFT JOIN PositionReviewers prr ON pr.PosReviewID = prr.PosReviewID
+            LEFT JOIN Users u ON prr.NUID = u.NUID;
+        '''
+    cursor = db.get_db().cursor()
+    cursor.execute(query)
+    reviews = cursor.fetchall()
+    return jsonify(reviews), 200
+
 @position.route('/PositionReview/<int:PositionID>', methods=['GET'])
 def get_reviews_by_position(PositionID=None):
     query = '''

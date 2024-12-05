@@ -6,6 +6,7 @@ import requests
 from streamlit_extras.app_logo import add_logo
 from modules.nav import SideBarLinks
 
+st.set_page_config(layout = 'wide', page_title = 'Company Review', page_icon = 'static/core-4.png')
 SideBarLinks()
 
 # Creating title and getting relationship of user to the company
