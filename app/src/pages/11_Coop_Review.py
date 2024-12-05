@@ -13,6 +13,29 @@ SideBarLinks()
 
 # Title and retrieving users relationship to position up for review
 st.title('Review a Coop')
+
+def fetch_data():
+    url = f'http://api:4000/p/positions/info'
+    response = requests.get(url)
+    response.raise_for_status()  
+    data = response.json()
+    return pd.DataFrame(data)
+
+
+df = fetch_data()
+position = st.selectbox("Select Position", df['PositionName'].unique())
+
+
+index = df.index[df['PositionName'] == position].tolist()
+
+# Ensure that posID is a scalar (not a Series)
+if index:
+    posID = df.loc[index[0], 'PositionID']
+    st.write(f"**PositionID**: {posID}")
+else:
+    posID = None
+    st.error("No PositionID found for the selected position.")
+
 menu = ['Rejected', 'Interview Stage', 'Offered Job', 'Took Position']
 choice = st.selectbox("Stage Reached", menu)
 
@@ -28,35 +51,35 @@ if choice == 'Rejected':
         appyield = 0
         interviewnum = 0
         submit_button = st.form_submit_button(label='Submit')
-        # # Posting data to database
-        # if submit_button:
-        #     if not difficulty or not date_results or not date_applied or not gpa or not review:
-        #         st.error("Mising Input")
-        #     else:
-        #         review_data = {
-        #             "Description": review,
-        #             "Offer": False,
-        #             "ApplicationRating": difficulty,
-        #             "EnvironmentRating": None,
-        #             "EnjoymentRating": None,
-        #             "Applied": True,
-        #             "AppliedDate": date_applied,
-        #             "ResposeDate": date_results,
-        #             "PositionID": None
-        #         }
-        #         logger.info(f"Product form submitted with data: {review_data}")
-        #         try:
-        #             # using the requests library to POST to /p/product.  Passing
-        #             # product_data to the endpoint through the json parameter.
-        #             # This particular end point is located in the products_routes.py
-        #             # file found in api/backend/products folder. 
-        #             response = requests.post('http://api:4000/p/product', json=review_data)
-        #             if response.status_code == 200:
-        #                 st.success("Product added successfully!")
-        #             else:
-        #                 st.error(f"Error adding product: {response.text}")
-        #         except requests.exceptions.RequestException as e:
-                    # st.error(f"Error connecting to server: {str(e)}")
+        # Posting data to database
+        if submit_button:
+            if not difficulty or not date_results or not date_applied or not gpa or not review:
+                st.error("Mising Input")
+            else:
+                review_data = {
+                    "Description": review,
+                    "Offer": False,
+                    "ApplicationRating": difficulty,
+                    "EnvironmentRating": None,
+                    "EnjoymentRating": None,
+                    "Applied": True,
+                    "AppliedDate": date_applied.isoformat(),
+                    "ResposeDate": date_results.isoformat(),
+                    "PositionID": posID
+                }
+                logger.info(f"Product form submitted with data: {review_data}")
+                try:
+                    # using the requests library to POST to /p/product.  Passing
+                    # product_data to the endpoint through the json parameter.
+                    # This particular end point is located in the products_routes.py
+                    # file found in api/backend/products folder. 
+                    response = requests.post('http://api:4000/p/PositionReview/post', json=review_data)
+                    if response.status_code == 200:
+                        st.success("Product added successfully!")
+                    else:
+                        st.error(f"Error adding product: {response.text}")
+                except requests.exceptions.RequestException as e:
+                    st.error(f"Error connecting to server: {str(e)}")
 
 
 # Creating form for if they were interviewed for the job
@@ -84,7 +107,7 @@ if choice == 'Interview Stage':
         #             "Applied": True,
         #             "AppliedDate": date_applied,
         #             "ResposeDate": date_results,
-        #             "PositionID": None
+        #             "PositionID": posID
         #         }
         #         logger.info(f"Product form submitted with data: {review_data}")
         #         try:
@@ -126,7 +149,7 @@ if choice == 'Offered Job':
         #             "Applied": True,
         #             "AppliedDate": date_applied,
         #             "ResposeDate": date_results,
-        #             "PositionID": None
+        #             "PositionID": posID
         #         }
         #         logger.info(f"Product form submitted with data: {review_data}")
         #         try:
@@ -171,7 +194,7 @@ if choice == 'Took Position':
         #             "Applied": True,
         #             "AppliedDate": date_applied,
         #             "ResposeDate": date_results,
-        #             "PositionID": None
+        #             "PositionID": posID
         #         }
         #         logger.info(f"Product form submitted with data: {review_data}")
         #         try:

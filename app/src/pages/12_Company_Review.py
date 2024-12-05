@@ -11,6 +11,7 @@ SideBarLinks()
 
 # Creating title and getting relationship of user to the company
 st.title("Review a Company")
+
 menu = ['Applied To Work For', 'Worked For']
 choice = st.selectbox("Connection To Company", menu)
 
