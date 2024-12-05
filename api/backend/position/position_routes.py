@@ -81,7 +81,7 @@ def add_new_position():
     cursor = db.get_db().cursor()
     cursor.execute(query, params)
     db.get_db().commit()
-    return jsonify({'message': 'Position added successfully'}), 201
+    return jsonify({'message': 'Position added successfully'}), 200
 
 
 # ------------------------------------------------------------
@@ -190,7 +190,7 @@ def add_review():
     cursor = db.get_db().cursor()
     cursor.execute(query, params)
     db.get_db().commit()
-    return jsonify({'message': 'Review added successfully'}), 201
+    return jsonify({'message': 'Review added successfully'}), 200
 
 
 # deleting reviews

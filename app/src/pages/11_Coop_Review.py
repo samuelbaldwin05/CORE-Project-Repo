@@ -14,6 +14,9 @@ SideBarLinks()
 # Title and retrieving users relationship to position up for review
 st.title('Review a Coop')
 
+
+
+# Getting position data to select position under review
 def fetch_data():
     url = f'http://api:4000/p/positions/info'
     response = requests.get(url)
@@ -21,27 +24,25 @@ def fetch_data():
     data = response.json()
     return pd.DataFrame(data)
 
-
+# Getting PositionID
 df = fetch_data()
 position = st.selectbox("Select Position", df['PositionName'].unique())
-
-
 index = df.index[df['PositionName'] == position].tolist()
-
-# Ensure that posID is a scalar (not a Series)
 if index:
-    posID = df.loc[index[0], 'PositionID']
+    posID = int(df.loc[index[0], 'PositionID'])
     st.write(f"**PositionID**: {posID}")
 else:
     posID = None
     st.error("No PositionID found for the selected position.")
+
+
 
 menu = ['Rejected', 'Interview Stage', 'Offered Job', 'Took Position']
 choice = st.selectbox("Stage Reached", menu)
 
 # Creating form for if they were rejected from the job
 if choice == 'Rejected':
-    st.subheader("Position Form")
+    st.subheader("Position Review Form")
     with st.form(key='RejectForm'):
         difficulty = st.number_input('Application Difficulty Rating (1-5)', 1, 5)
         date_applied = st.date_input('Date of Application')
@@ -61,10 +62,11 @@ if choice == 'Rejected':
                     "Offer": False,
                     "ApplicationRating": difficulty,
                     "EnvironmentRating": None,
+                    "EducationRating": None,
                     "EnjoymentRating": None,
                     "Applied": True,
                     "AppliedDate": date_applied.isoformat(),
-                    "ResposeDate": date_results.isoformat(),
+                    "ResponseDate": date_results.isoformat(),
                     "PositionID": posID
                 }
                 logger.info(f"Product form submitted with data: {review_data}")
@@ -84,6 +86,7 @@ if choice == 'Rejected':
 
 # Creating form for if they were interviewed for the job
 if choice == 'Interview Stage':
+    st.subheader("Position Review Form")
     with st.form(key='IntForm'):
         difficulty = st.number_input('Application Difficulty Rating (1-5)', 1, 5)
         data_applied = st.date_input('Date of Application')
@@ -103,10 +106,11 @@ if choice == 'Interview Stage':
         #             "Offer": False,
         #             "ApplicationRating": difficulty,
         #             "EnvironmentRating": None,
+                    # "EducationRating": None,
         #             "EnjoymentRating": None,
         #             "Applied": True,
         #             "AppliedDate": date_applied,
-        #             "ResposeDate": date_results,
+        #             "ResponseDate": date_results,
         #             "PositionID": posID
         #         }
         #         logger.info(f"Product form submitted with data: {review_data}")
@@ -126,6 +130,7 @@ if choice == 'Interview Stage':
 
 # Creating form for if they were offered the job
 if choice == 'Offered Job':
+     st.subheader("Position Review Form")
      with st.form(key='OfferForm'):
         difficulty = st.number_input('Application Difficulty Rating (1-5)', 1, 5)
         data_applied = st.date_input('Date of Application')
@@ -145,6 +150,7 @@ if choice == 'Offered Job':
         #             "Offer": True,
         #             "ApplicationRating": difficulty,
         #             "EnvironmentRating": None,
+                    # "EducationRating": None,        
         #             "EnjoymentRating": None,
         #             "Applied": True,
         #             "AppliedDate": date_applied,
@@ -168,6 +174,7 @@ if choice == 'Offered Job':
 
 # Creating form for if they took the job
 if choice == 'Took Position':
+    st.subheader("Position Review Form")
     with st.form(key='PosWorkForm'):
         difficulty = st.number_input('Application Difficulty Rating (1-5)', 1, 5)
         data_applied = st.date_input('Date of Application')
@@ -190,10 +197,11 @@ if choice == 'Took Position':
         #             "Offer": True,
         #             "ApplicationRating": difficulty,
         #             "EnvironmentRating": env_rating,
+                    # "EducationRating": None,
         #             "EnjoymentRating": enjoyment_rating,
         #             "Applied": True,
         #             "AppliedDate": date_applied,
-        #             "ResposeDate": date_results,
+        #             "ResponseDate": date_results,
         #             "PositionID": posID
         #         }
         #         logger.info(f"Product form submitted with data: {review_data}")
