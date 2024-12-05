@@ -128,3 +128,20 @@ def add_com_review():
     cursor.execute(query, params)
     db.get_db().commit()
     return jsonify({'message': 'Review added successfully'}), 200
+
+
+@company.route('/Company/int<CompanyID>', methods=['PUT'])
+def update_company_name(CompanyID):
+    data = request.json
+
+    query = '''
+        UPDATE Company
+        SET Name = %s
+        WHERE CompanyID = %s
+    '''
+    params = (data['Name'], CompanyID)
+
+    cursor = db.get_db().cursor()
+    cursor.execute(query, params)
+    db.get_db().commit()
+    return jsonify({'message': f'Company name for CompanyID {CompanyID} updated successfully.'}), 200
