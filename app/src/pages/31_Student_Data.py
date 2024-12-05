@@ -16,12 +16,13 @@ st.title('View Student Data')
 
 def fetch_data(position_id=None):
     if position_id:
-        url = f'http://localhost:4000/p/PositionReview{position_id}'
+        url = f'http://api:4000/p/PositionReview/{position_id}'
     else:
-        url = 'http://localhost:4000/p/PositionReview'
-    response = requests.get(url) 
+        url = 'http://api:4000/p/PositionReview'
+    response = requests.get(url)
     data = response.json()
-    return pd.DataFrame(data)  # Dataframe to make graph easier
+    return pd.DataFrame(data)
+  # Dataframe to make graph easier
     #except requests.exceptions.RequestException as e:
        # logger.error(f"Error fetching data: {e}")
        # st.error("Failed to fetch data. Please check the server.")
