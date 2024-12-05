@@ -46,6 +46,7 @@ Act as one of 4 mock personas simualting the use of our application
 ## Run Instructions 
 
 - Copy ".env.template" on local computer and rename ".env"
+- Assign local password in the ".evv" file
 - Ensure Docker is updated and open, run "docker compose build" in project terminal 
 - Allow Docker to build (this may take a few minutes) than run "docker compose up" in project terminal
 - Navigate to localhost:8501 
