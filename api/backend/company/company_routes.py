@@ -47,6 +47,8 @@ def get_companies_by_industry(Industry):
     response = make_response(jsonify(theData))
     response.status_code = 200
 
+    return response
+
 # Get companies by city
 @company.route('/Company/Location/<City>', methods=['GET'])
 def get_companies_by_city(City):
