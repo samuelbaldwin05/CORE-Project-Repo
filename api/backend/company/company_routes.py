@@ -207,11 +207,7 @@ def delete_company_review(ComReviewID):
     cursor = db.get_db().cursor()
     cursor.execute(query)
     db.get_db().commit()
-<<<<<<< Updated upstream
-    response = make_response("Successfully deleted review")
-    response.status_code = 200
-    
-    return response
+    return jsonify({'message': f'Position with ID {ComReviewID} deleted successfully.'}), 200
 
 @company.route('/Company/stats', methods=['GET'])
 def get_average_company_stats():
@@ -239,6 +235,4 @@ def get_average_company_stats():
     cursor.execute(query)
     results = cursor.fetchall()
     return jsonify(results), 200
-=======
-    return jsonify({'message': f'Position with ID {ComReviewID} deleted successfully.'}), 200
->>>>>>> Stashed changes
+
