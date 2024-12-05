@@ -12,69 +12,94 @@ SideBarLinks()
 # Creating title and getting relationship of user to the company
 st.title("Review a Company")
 
+
+# Getting company data to select position under review
+def fetch_data():
+    url = f'http://api:4000/c/Company'
+    response = requests.get(url)
+    response.raise_for_status()  
+    data = response.json()
+    return pd.DataFrame(data)
+
+# Getting CompanyID
+df = fetch_data()
+position = st.selectbox("Select Position", df['Name'].unique())
+index = df.index[df['Name'] == position].tolist()
+if index:
+    comID = int(df.loc[index[0], 'CompanyID'])
+    st.write(f"**CompanyID**: {comID}")
+else:
+    comID = None
+    st.error("No PositionID found for the selected position.")
+
+
+
 menu = ['Applied To Work For', 'Worked For']
 choice = st.selectbox("Connection To Company", menu)
 
 # Creating form for if user applied to work for them
 if choice == 'Applied To Work For':
-    with st.form(key='RejectForm'):
+    st.subheader("Company Review Form")
+    with st.form(key='appto'):
         type = st.text_input("Extent of Relationship With Company")
         review = st.text_input("Review Space")
         submit_button = st.form_submit_button(label='Submit')
-        # if submit_button:
-        #     if not type or not review:
-        #         st.error("Mising Input")
-        #     else:
-        #         product_data = {
-        #             "Type": type,
-        #             "Description": review,
-        #             "EnvironmentRating": None,
-        #             "CultureRating": None
-        #         }
-        #         logger.info(f"Product form submitted with data: {product_data}")
-        #         try:
-        #             # using the requests library to POST to /p/product.  Passing
-        #             # product_data to the endpoint through the json parameter.
-        #             # This particular end point is located in the products_routes.py
-        #             # file found in api/backend/products folder. 
-        #             response = requests.post('http://api:4000/p/product', json=product_data)
-        #             if response.status_code == 200:
-        #                 st.success("Product added successfully!")
-        #             else:
-        #                 st.error(f"Error adding product: {response.text}")
-        #         except requests.exceptions.RequestException as e:
-        #             st.error(f"Error connecting to server: {str(e)}")
+        if submit_button:
+            if not type or not review:
+                st.error("Mising Input")
+            else:
+                comreview_data = {
+                    "CompanyId": comID,
+                    "Type": type,
+                    "Description": review,
+                    "EnvironmentRating": None,
+                    "CultureRating": None
+                }
+                logger.info(f"Product form submitted with data: {comreview_data}")
+                try:
+                    # using the requests library to POST to /p/product.  Passing
+                    # product_data to the endpoint through the json parameter.
+                    # This particular end point is located in the products_routes.py
+                    # file found in api/backend/products folder. 
+                    response = requests.post('http://api:4000/c/CompanyReview', json=comreview_data)
+                    if response.status_code == 200:
+                        st.success("Product added successfully!")
+                    else:
+                        st.error(f"Error adding product: {response.text}")
+                except requests.exceptions.RequestException as e:
+                    st.error(f"Error connecting to server: {str(e)}")
 
 
 # Creating form for if user worked for them
 if choice == 'Worked For':
-    with st.form(key='ComWorkForm'):
+    st.subheader("Company Review Form")
+    with st.form(key='workedfor'):
         type = st.text_input("Extent of Relationship With Company")
         review = st.text_input("Review Space")
-        envrating = st.number_input("Environment Rating (1-5)", 1, 5)
-        culturerating = st.number_input("Culture Rating (1-5)", 1, 5)
+        env_rating = st.number_input('Rating of Environment While Working (1-5)', 1, 5)
+        culture_rating = st.number_input('Rating of Culture While Working (1-5)', 1, 5)
         submit_button = st.form_submit_button(label='Submit')
-        # # Posting data to database
-        # if submit_button:
-        #     if not type or not review:
-        #         st.error("Mising Input")
-        #     else:
-        #         product_data = {
-        #             "Type": type,
-        #             "Description": review,
-        #             "EnvironmentRating": envrating,
-        #             "CultureRating": culturerating
-        #         }
-        #         logger.info(f"Product form submitted with data: {product_data}")
-        #         try:
-        #             # using the requests library to POST to /p/product.  Passing
-        #             # product_data to the endpoint through the json parameter.
-        #             # This particular end point is located in the products_routes.py
-        #             # file found in api/backend/products folder. 
-        #             response = requests.post('http://api:4000/p/product', json=product_data)
-        #             if response.status_code == 200:
-        #                 st.success("Product added successfully!")
-        #             else:
-        #                 st.error(f"Error adding product: {response.text}")
-        #         except requests.exceptions.RequestException as e:
-        #             st.error(f"Error connecting to server: {str(e)}")
+        if submit_button:
+            if not type or not review:
+                st.error("Mising Input")
+            else:
+                comreview_data = {
+                    "CompanyId": comID,
+                    "Type": type,
+                    "Description": review,
+                    "EnvironmentRating": env_rating,
+                    "CultureRating": culture_rating
+                }
+                logger.info(f"Product form submitted with data: {comreview_data}")
+                try:
+                    # using the requests library to POST to /p/product.  Passing
+                    # product_data to the endpoint through the json parameter.
+                    # This particular end point is located in the products_routes.py
+                    # file found in api/backend/products folder. 
+                    response = requests.post('http://api:4000/c/CompanyReview', json=comreview_data)
+                    if response.status_code == 200:
+                        st.success("Product added successfully!")
+                    else:
+                        st.error(f"Error adding product: {response.text}")
+                except requests.exceptions.RequestException as e:
+                    st.error(f"Error connecting to server: {str(e)}")

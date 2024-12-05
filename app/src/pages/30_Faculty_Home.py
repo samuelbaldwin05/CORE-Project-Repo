@@ -21,4 +21,7 @@ if st.button('View Coop Data',
              use_container_width=True):
   st.switch_page('pages/32_Coop_Data.py')
 
-
+if st.button('Alter Student Data',
+             type='primary',
+             use_container_width=True):
+  st.switch_page('pages/33_Alter_Students.py')

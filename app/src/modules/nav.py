@@ -69,6 +69,12 @@ def CoopDataNav():
     st.sidebar.page_link(
         "pages/32_Coop_Data.py", label="View Coop Data", icon="🏠"
     )
+
+def AlterStudentDataNav():
+    st.sidebar.page_link(
+        "pages/33_Alter_Students.py", label="Alter Student Data", icon="🧠"
+    )
+
 #### ------------------------ System Admin Role ------------------------
 def AdminPageNav():
     st.sidebar.page_link(
@@ -123,6 +129,7 @@ def SideBarLinks(show_home=False):
             FacultyHomeNav()
             StudentDataNav()
             CoopDataNav()
+            AlterStudentDataNav()
 
         # If the user is an administrator, give them access to the administrator pages
         if st.session_state["role"] == "administrator":
