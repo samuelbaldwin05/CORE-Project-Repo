@@ -19,12 +19,17 @@ if st.button('Review a Coop',
              use_container_width=True):
   st.switch_page('pages/11_Coop_Review.py')
 
-if st.button('View Coops',
-             type='primary',
-             use_container_width=True):
-  st.switch_page('pages/01_View_Coops.py')
-
 if st.button("Review a Company",
              type='primary',
              use_container_width=True):
   st.switch_page('pages/12_Company_Review.py')
+
+if st.button('Search Co-ops By Position',
+             type='primary',
+             use_container_width=True):
+  st.switch_page('pages/01_View_Coops.py')
+
+if st.button('Search Co-ops By Company',
+             type='primary',
+             use_container_width=True):
+  st.switch_page('pages/02_View_Companies.py')

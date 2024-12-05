@@ -49,6 +49,25 @@ def get_companies_by_industry(Industry):
 
     return response
 
+@company.route('/Company/info', methods=['GET'])
+def get_company_info():
+    query = f'''
+        SELECT c.CompanyID, c.Name AS CompanyName, c.Industry, c.CompanySize, l.State, l.City, l.CountryCode, l.Address, 
+        cr.ComReviewID, cr.Type AS ReviewType, cr.Description AS ReviewDescription, cr.EnvironmentRating, cr.CultureRating, 
+        u.NUID AS ReviewerNUID, u.Username AS ReviewerUsername
+        FROM Company c
+        INNER JOIN Location l ON c.LocationId = l.LocationId
+        LEFT JOIN CompanyReview cr ON c.CompanyID = cr.CompanyId
+        LEFT JOIN CompanyReviewers crv ON cr.ComReviewID = crv.ComReviewID
+        LEFT JOIN Users u ON crv.NUID = u.NUID;
+    '''
+    cursor = db.get_db().cursor()
+    cursor.execute(query)
+    theData = cursor.fetchall()
+    response = make_response(jsonify(theData))
+    response.status_code = 200
+
+    return response
 # Get companies by city
 @company.route('/Company/Location/<City>', methods=['GET'])
 def get_companies_by_city(City):

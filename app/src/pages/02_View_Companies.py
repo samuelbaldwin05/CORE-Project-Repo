@@ -15,7 +15,7 @@ st.title("Search By Company")
 # You can access the session state to make a more customized/personalized app experience
 
 def fetch_data():
-    url = f'http://api:4000/p/positions/info'
+    url = f'http://api:4000/c/Company/info'
     response = requests.get(url)
     response.raise_for_status()  
     data = response.json()
@@ -24,8 +24,8 @@ def fetch_data():
 
 df = fetch_data()
 
-position = st.selectbox("Select Position", df['PositionName'].unique())
-filtered_df = df[df['PositionName'] == position]
+position = st.selectbox("Select Company", df['CompanyName'].unique())
+filtered_df = df[df['CompanyName'] == position]
 
 if len(filtered_df) != 0:
     # Create two columns
@@ -34,34 +34,29 @@ if len(filtered_df) != 0:
     # Display position info in the first column
     with col1:   
         # Get the first row of filtered data
-        pos_info = filtered_df.iloc[0]
+        comp_info = filtered_df.iloc[0]
         
-        # Use if-else to check for 1/0 and display Yes/No
-        st.header(f"Position: {pos_info['PositionName']}")
-        st.write(f"**Description**: {pos_info['PositionDescription']}")
+        st.header(f"Company Name: {comp_info['CompanyName']}")
 
-        st.subheader("General Position Information")
-        st.write(f"**Yield Rate**: {(pos_info['YieldRate']) * 100}%")
-        #st.write(f"**Average Application Amount**: {pos_info['AvgAppAmount']}")
-        #st.write(f"**Average Interview Amount**: {pos_info['AvgInterview']}")
-        st.write(f"**Average Applicant GPA**: {pos_info['AvgGpa']}")
-        st.write(f"**Average Learning Rating**: {pos_info['AvgLearning']}")
-        st.write(f"**Average Environment Rating**: {pos_info['AvgEnvironment']}")
+        st.subheader("General Information")
+        st.write(f"**Address**: {(comp_info['Address'])}")
+        st.write(f"**City**: {comp_info['City']}")
+        st.write(f"**Country**: {comp_info['CountryCode']}")
+        st.write(f"**State**: {comp_info['State']}")
+        st.write(f"**Company Size**: {comp_info['CompanySize']}")
+        st.write(f"**Industry**: {comp_info['Industry']}")
         
     # Display reviewer information in the second column
     with col2:
-        st.header(f"Applicant Reviews")
+        st.header(f"Employee Reviews")
  
         for _, reviewer in filtered_df.iterrows():
-            st.subheader(f"Reviewer: {reviewer['Username']}")
-            st.write(f"**Offer**: {'Yes' if reviewer['Offer'] == 1 else 'No'}")
-            st.write(f"**Application Rating**: {reviewer['ApplicationRating']}")
+            st.subheader(f"Reviewer: {reviewer['ReviewerUsername']}")
+            st.write(f"**Employment Type**: {reviewer['ReviewType']}")
+            st.write(f"**Description**: {comp_info['ReviewDescription']}")
             st.write(f"**Environment Rating**: {reviewer['EnvironmentRating']}")
-            st.write(f"**Education Rating**: {reviewer['EducationRating']}")
-            st.write(f"**Enjoyment Rating**: {reviewer['EnjoymentRating']}")
-            st.write(f"**Position Applied**: {'Yes' if reviewer['Applied'] == 1 else 'No'}")
-            st.write(f"**Applied Date**: {reviewer['AppliedDate']}")
-            st.write(f"**Response Date**: {reviewer['ResponseDate']}")
+            st.write(f"**Culture Rating**: {reviewer['CultureRating']}")
+
             st.write("----------")
             st.write("")
 

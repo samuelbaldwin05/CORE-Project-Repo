@@ -13,48 +13,46 @@ def HomeNav():
 def AboutPageNav():
     st.sidebar.page_link("pages/40_About.py", label="About", icon="🧠")
 
-
 #### ------------------------ Roles of Coop Searcher ------------------------
 def PolStratAdvHomeNav():
     st.sidebar.page_link(
-        "pages/00_Coop_Searcher_Home.py", label="Coop Searcher Home", icon="👤"
+        "pages/00_Coop_Searcher_Home.py", label="Coop Searcher Home", icon="🏠"
     )
 
 
 def ViewCoopsNav():
     st.sidebar.page_link(
-        "pages/01_View_Coops.py", label="View Coops", icon="🏦"
+        "pages/01_View_Coops.py", label="Search Co-ops By Position", icon="📋"
     )
 
 
 def ViewCompaniesNav():
     st.sidebar.page_link(
-        "pages/02_View_Companies.py", label="View Companies", icon="🗺️"
+        "pages/02_View_Companies.py", label="Search Co-ops By Company", icon="🏢"
     )
 
 
 def ViewPostingsNav():
     st.sidebar.page_link(
-        "pages/03_View_Job_Postings.py", label="View Job Postings", icon="🗺️"
+        "pages/03_View_Job_Postings.py", label="View Job Postings", icon="📄"
     )
 
-
-## ------------------------ Roles of coop reviewer ------------------------
+## ------------------------ Roles of Coop Reviewer ------------------------
 def ReviewerHomeNav():
     st.sidebar.page_link(
         "pages/10_Coop_Reviewer_Home.py", label="Reviewer Home", icon="🏠"
     )
 
 def CoopReviewNav():
-    st.sidebar.page_link("pages/11_Coop_Review.py", label="Review Coops", icon="🛜")
+    st.sidebar.page_link("pages/11_Coop_Review.py", label="Review Coops", icon="📝")
 
 
 def CompanyReviewNav():
     st.sidebar.page_link(
-        "pages/12_Company_Review.py", label="Review Companies", icon="📈"
+        "pages/12_Company_Review.py", label="Review Companies", icon="📊"
     )
 
-## ------------------------ Roles of faculty coop advisor ---------------------
+## ------------------------ Roles of Faculty Coop Advisor ---------------------
 def FacultyHomeNav():
     st.sidebar.page_link(
         "pages/30_Faculty_Home.py", label="Faculty Home", icon="🏠"
@@ -62,23 +60,23 @@ def FacultyHomeNav():
 
 def StudentDataNav():
     st.sidebar.page_link(
-        "pages/31_Student_Data.py", label="View Student Data", icon="🏠"
+        "pages/31_Student_Data.py", label="View Student Data", icon="👨‍🎓"
     )
 
 def CoopDataNav():
     st.sidebar.page_link(
-        "pages/32_Coop_Data.py", label="View Coop Data", icon="🏠"
+        "pages/32_Coop_Data.py", label="View Coop Data", icon="📊"
     )
 
 def AlterStudentDataNav():
     st.sidebar.page_link(
-        "pages/33_Alter_Students.py", label="Alter Student Data", icon="🧠"
+        "pages/33_Alter_Students.py", label="Alter Student Data", icon="✏️"
     )
 
 #### ------------------------ System Admin Role ------------------------
 def AdminPageNav():
     st.sidebar.page_link(
-        "pages/20_Admin_Home.py", label="System Admin", icon="🖥️"
+        "pages/20_Admin_Home.py", label="System Admin", icon="🛠️"
     )
     st.sidebar.page_link(
         "pages/21_Coop_Review_Mgmt.py", label="Delete Incorrect Data", icon="🗑️"
@@ -87,8 +85,9 @@ def AdminPageNav():
         "pages/22_Company_Review_Mgmt.py", label="Company Review Management", icon="🏢"
     )
     st.sidebar.page_link(
-        "pages/23_Job_Posting_Mgmt.py", label="Job Posting Management", icon="🏢"
+        "pages/23_Job_Posting_Mgmt.py", label="Job Posting Management", icon="🗂️"
     )
+
 
 
 # --------------------------------Links Function -----------------------------------------------
@@ -122,8 +121,9 @@ def SideBarLinks(show_home=False):
         if st.session_state["role"] == "reviewer":
             ReviewerHomeNav()
             CoopReviewNav()
-            ViewCoopsNav()
             CompanyReviewNav()
+            ViewCoopsNav()
+            ViewCompaniesNav()
 
         if st.session_state["role"] == "faculty":
             FacultyHomeNav()
