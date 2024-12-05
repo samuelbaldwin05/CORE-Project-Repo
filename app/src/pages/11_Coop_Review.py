@@ -103,6 +103,8 @@ if choice == 'Rejected':
                 except requests.exceptions.RequestException as e:
                     st.error(f"Error connecting to server: {str(e)}")
 
+
+
 # Creating form for if they were interviewed for the job
 if choice == 'Interview Stage':
     st.subheader("Position Review Form")
@@ -169,6 +171,8 @@ if choice == 'Interview Stage':
                     st.error(f"Error connecting to server: {str(e)}")
 
 
+
+
 # Creating form for if they were offered the job
 if choice == 'Offered Job':
      st.subheader("Position Review Form")
@@ -233,6 +237,8 @@ if choice == 'Offered Job':
                         st.error(f"Error adding Review: {response.text}")
                 except requests.exceptions.RequestException as e:
                     st.error(f"Error connecting to server: {str(e)}")
+
+
 
 
 # Creating form for if they took the job
