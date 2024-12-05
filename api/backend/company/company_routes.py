@@ -92,7 +92,7 @@ def get_companies_by_city(City):
 def get_all_companies():
     query = f'''
         SELECT *
-        FROM Company'
+        FROM Company
     '''
     
     # get a cursor object from the database
@@ -108,3 +108,23 @@ def get_all_companies():
     response = make_response(jsonify(theData))
     response.status_code = 200
     return response
+
+# Create new company review
+@company.route('/CompanyReview', methods=['POST'])
+def add_com_review():
+    data = request.json  # Expecting JSON input
+    query = '''
+        INSERT INTO CompanyReview (
+            CompanyId, Type, Description, EnvironmentRating,
+            CultureRating
+        )
+        VALUES (%s, %s, %s, %s, %s)
+    '''
+    params = (
+        data['CompanyId'], data['Type'], data['Description'],
+        data['EnvironmentRating'], data['CultureRating']
+    )
+    cursor = db.get_db().cursor()
+    cursor.execute(query, params)
+    db.get_db().commit()
+    return jsonify({'message': 'Review added successfully'}), 200
