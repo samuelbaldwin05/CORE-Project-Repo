@@ -47,17 +47,14 @@ if choice == 'Rejected':
         difficulty = st.number_input('Application Difficulty Rating (1-5)', 1, 5)
         date_applied = st.date_input('Date of Application')
         date_results = st.date_input('Date of Results')
-        gpa = st.number_input('GPA')
         review = st.text_input('Review Space')
-        appyield = 0
-        interviewnum = 0
         submit_button = st.form_submit_button(label='Submit')
         # Posting data to database
         if submit_button:
-            if not difficulty or not date_results or not date_applied or not gpa or not review:
+            if not difficulty or not date_results or not date_applied or not review:
                 st.error("Mising Input")
             else:
-                review_data = {
+                review_data1 = {
                     "Description": review,
                     "Offer": False,
                     "ApplicationRating": difficulty,
@@ -69,13 +66,13 @@ if choice == 'Rejected':
                     "ResponseDate": date_results.isoformat(),
                     "PositionID": posID
                 }
-                logger.info(f"Product form submitted with data: {review_data}")
+                logger.info(f"Reject form submitted with data: {review_data1}")
                 try:
                     # using the requests library to POST to /p/product.  Passing
                     # product_data to the endpoint through the json parameter.
                     # This particular end point is located in the products_routes.py
                     # file found in api/backend/products folder. 
-                    response = requests.post('http://api:4000/p/PositionReview/post', json=review_data)
+                    response = requests.post('http://api:4000/p/PositionReview/post', json=review_data1)
                     if response.status_code == 200:
                         st.success("Product added successfully!")
                     else:
@@ -83,6 +80,36 @@ if choice == 'Rejected':
                 except requests.exceptions.RequestException as e:
                     st.error(f"Error connecting to server: {str(e)}")
 
+    with st.form(key='rejectstatform'):
+        gpa = st.number_input('GPA')
+        submit_button = st.form_submit_button(label='Submit')
+        # Posting data to database
+        if submit_button:
+            if gpa == 0:
+                st.error("Mising Input")
+            else:
+                review_data = {
+                    "YieldRate": 0,
+                    "AvgAppAmount": 1,
+                    "AvgInterview": 0,
+                    "AvgGpa": gpa,
+                    "AvgLearning": 0,
+                    "AvgEnvironment": 0,
+                    "AvgInterviewTime": 0,
+                }
+                logger.info(f"Reject stat form submitted with data: {review_data}")
+                try:
+                    # using the requests library to POST to /p/product.  Passing
+                    # product_data to the endpoint through the json parameter.
+                    # This particular end point is located in the products_routes.py
+                    # file found in api/backend/products folder. 
+                    response = requests.put(f'http://api:4000/p/posstats/{posID}', json=review_data)
+                    if response.status_code == 200:
+                        st.success("Product added successfully!")
+                    else:
+                        st.error(f"Error adding product: {response.text}")
+                except requests.exceptions.RequestException as e:
+                    st.error(f"Error connecting to server: {str(e)}")
 
 # Creating form for if they were interviewed for the job
 if choice == 'Interview Stage':
@@ -96,7 +123,7 @@ if choice == 'Interview Stage':
         review = st.text_input('Review Space')
         appyield = 0
         submit_button = st.form_submit_button(label='Submit')
-        # # Posting data to database
+        # Posting data to database
         # if submit_button:
         #     if not difficulty or not date_results or not date_applied or not gpa or not review:
         #         st.error("Mising Input")

@@ -91,19 +91,25 @@ def update_posstats(PositionID):
     data = request.json
     query = '''
         UPDATE PosStats
-        SET AppCount = %s,
-            InterviewAmount = %s,
-            OfferAmount = %s,
-            AcceptanceAmount = %s,
-            CallbackAmount = %s,
-            AvgResponseTime = %s
+        SET YieldRate = %s,
+            AvgAppAmount = %s,
+            AvgInterview = %s,
+            AvgGpa = %s,
+            AvgLearning = %s,
+            AvgEnvironment = %s,
+            AvgInterviewTime = %s
         WHERE PositionID = %s
     '''
-    params = (data['AppCount'], data['InterviewAmount'], data['OfferAmount'], data['AcceptanceAmount'], data['CallbackAmount'], data['AvgResponseTime'], PositionID)
+    params = (
+        data['YieldRate'], data['AvgAppAmount'], data['AvgInterview'],
+        data['AvgGpa'], data['AvgLearning'], data['AvgEnvironment'],
+        data['AvgInterviewTime'], PositionID
+    )
     cursor = db.get_db().cursor()
     cursor.execute(query, params)
     db.get_db().commit()
     return jsonify({'message': f'Position stats for PositionID {PositionID} updated successfully.'}), 200
+
 
 
 # ------------------------------------------------------------
