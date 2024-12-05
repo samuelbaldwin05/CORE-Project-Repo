@@ -89,7 +89,7 @@ def get_companies_by_city(City):
 
 # Get all company data
 @company.route('/Company', methods=['GET'])
-def get_companies_by_city():
+def get_all_companies():
     query = f'''
         SELECT *
         FROM Company'
