@@ -15,32 +15,32 @@ users = Blueprint('users', __name__)
 
 
 # GET route for Persona2, retrieves student data under specfic advisor
-
-@users.route('/users/<advisorid>', methods=['GET'])
-def view_student_data_advisorid (AdvisorId):
-
-    query = f'''SELECT Username,
-                       GPA, 
-                       MajorID, 
-                       AppCount, 
-                       OfferCount, 
-                       NUID
-                        
-                FROM Users 
-                WHERE AdvisorId = {str(AdvisorId)}
+@users.route('/users/<int:advisorid>', methods=['GET'])
+def view_student_data_advisorid(advisorid):
+    # Parameterized query to avoid SQL injection
+    query = '''
+        SELECT Username,
+               MajorID, 
+               GPA, 
+               AppCount, 
+               OfferCount, 
+               NUID
+        FROM Users 
+        WHERE AdvisorId = %s
     '''
     
-    current_app.logger.info(f'GET /users/<advisorid> query={query}')
+    current_app.logger.info(f'GET /users/{advisorid} query={query}')
 
     cursor = db.get_db().cursor()
-    cursor.execute(query)
+    cursor.execute(query, (advisorid,))
     theData = cursor.fetchall()
     
-    current_app.logger.info(f'GET /user/advisorid> Result of query = {theData}')
+    current_app.logger.info(f'GET /users/{advisorid} Result of query = {theData}')
     
     response = make_response(jsonify(theData))
     response.status_code = 200
     return response
+
     
 # ------------------------------------------------------------
 
