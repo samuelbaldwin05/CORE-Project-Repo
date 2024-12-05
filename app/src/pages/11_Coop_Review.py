@@ -11,30 +11,12 @@ st.set_page_config(layout = 'wide')
 # Display the appropriate sidebar links for the role of the logged in user
 SideBarLinks()
 
-
-def fetch_data(position_id=None):
-    if position_id:
-        url = f'http://localhost:4000/PositionReview/{position_id}'  # Replace with your actual API base URL
-    else:
-        url = 'http://localhost:4000/PositionReview'  # Endpoint for all reviews
-    try:
-        response = requests.get(url)
-        response.raise_for_status()  # Raise an error for bad responses (4xx/5xx)
-        data = response.json()
-        return pd.DataFrame(data)  # Convert to DataFrame for easy manipulation
-    except requests.exceptions.RequestException as e:
-        logger.error(f"Error fetching data: {e}")
-        st.error("Failed to fetch data. Please check the server.")
-        return pd.DataFrame()  # Return an empty DataFrame on error
-    
-    
-
-
+# Title and retrieving users relationship to position up for review
 st.title('Review a Coop')
 menu = ['Rejected', 'Interview Stage', 'Offered Job', 'Took Position']
 choice = st.selectbox("Stage Reached", menu)
 
-
+# Creating form for if they were rejected from the job
 if choice == 'Rejected':
     st.subheader("Position Form")
     with st.form(key='RejectForm'):
@@ -46,6 +28,7 @@ if choice == 'Rejected':
         appyield = 0
         interviewnum = 0
         submit_button = st.form_submit_button(label='Submit')
+        # # Posting data to database
         # if submit_button:
         #     if not difficulty or not date_results or not date_applied or not gpa or not review:
         #         st.error("Mising Input")
@@ -53,7 +36,7 @@ if choice == 'Rejected':
         #         review_data = {
         #             "Description": review,
         #             "Offer": False,
-        #             "ApplicationRating": None,
+        #             "ApplicationRating": difficulty,
         #             "EnvironmentRating": None,
         #             "EnjoymentRating": None,
         #             "Applied": True,
@@ -75,6 +58,8 @@ if choice == 'Rejected':
         #         except requests.exceptions.RequestException as e:
                     # st.error(f"Error connecting to server: {str(e)}")
 
+
+# Creating form for if they were interviewed for the job
 if choice == 'Interview Stage':
     with st.form(key='IntForm'):
         difficulty = st.number_input('Application Difficulty Rating (1-5)', 1, 5)
@@ -85,7 +70,38 @@ if choice == 'Interview Stage':
         review = st.text_input('Review Space')
         appyield = 0
         submit_button = st.form_submit_button(label='Submit')
+        # # Posting data to database
+        # if submit_button:
+        #     if not difficulty or not date_results or not date_applied or not gpa or not review:
+        #         st.error("Mising Input")
+        #     else:
+        #         review_data = {
+        #             "Description": review,
+        #             "Offer": False,
+        #             "ApplicationRating": difficulty,
+        #             "EnvironmentRating": None,
+        #             "EnjoymentRating": None,
+        #             "Applied": True,
+        #             "AppliedDate": date_applied,
+        #             "ResposeDate": date_results,
+        #             "PositionID": None
+        #         }
+        #         logger.info(f"Product form submitted with data: {review_data}")
+        #         try:
+        #             # using the requests library to POST to /p/product.  Passing
+        #             # product_data to the endpoint through the json parameter.
+        #             # This particular end point is located in the products_routes.py
+        #             # file found in api/backend/products folder. 
+        #             response = requests.post('http://api:4000/p/product', json=review_data)
+        #             if response.status_code == 200:
+        #                 st.success("Product added successfully!")
+        #             else:
+        #                 st.error(f"Error adding product: {response.text}")
+        #         except requests.exceptions.RequestException as e:
+                    # st.error(f"Error connecting to server: {str(e)}")
 
+
+# Creating form for if they were offered the job
 if choice == 'Offered Job':
      with st.form(key='OfferForm'):
         difficulty = st.number_input('Application Difficulty Rating (1-5)', 1, 5)
@@ -96,7 +112,38 @@ if choice == 'Offered Job':
         review = st.text_input('Review Space')
         appyield = 1
         submit_button = st.form_submit_button(label='Submit')
+        # # Posting data to database
+        # if submit_button:
+        #     if not difficulty or not date_results or not date_applied or not gpa or not review:
+        #         st.error("Mising Input")
+        #     else:
+        #         review_data = {
+        #             "Description": review,
+        #             "Offer": True,
+        #             "ApplicationRating": difficulty,
+        #             "EnvironmentRating": None,
+        #             "EnjoymentRating": None,
+        #             "Applied": True,
+        #             "AppliedDate": date_applied,
+        #             "ResposeDate": date_results,
+        #             "PositionID": None
+        #         }
+        #         logger.info(f"Product form submitted with data: {review_data}")
+        #         try:
+        #             # using the requests library to POST to /p/product.  Passing
+        #             # product_data to the endpoint through the json parameter.
+        #             # This particular end point is located in the products_routes.py
+        #             # file found in api/backend/products folder. 
+        #             response = requests.post('http://api:4000/p/product', json=review_data)
+        #             if response.status_code == 200:
+        #                 st.success("Product added successfully!")
+        #             else:
+        #                 st.error(f"Error adding product: {response.text}")
+        #         except requests.exceptions.RequestException as e:
+                    # st.error(f"Error connecting to server: {str(e)}")
 
+
+# Creating form for if they took the job
 if choice == 'Took Position':
     with st.form(key='PosWorkForm'):
         difficulty = st.number_input('Application Difficulty Rating (1-5)', 1, 5)
@@ -106,13 +153,40 @@ if choice == 'Took Position':
         interviewnum = st.number_input('Number of Interviews Had')
         env_rating = st.number_input('Rating of Environment While Working (1-5)', 1, 5)
         education_rating = st.number_input('Rating of Education Received While Working (1-5)', 1, 5)
-        professionality_rating = st.number_input('Overall Enjoyment of Position (1-5)', 1, 5)
+        enjoyment_rating = st.number_input('Overall Enjoyment of Position (1-5)', 1, 5)
         review = st.text_input('Review Space')
         appyield = 1
         submit_button = st.form_submit_button(label='Submit')
+        # # Posting data to database
+        # if submit_button:
+        #     if not difficulty or not date_results or not date_applied or not gpa or not review:
+        #         st.error("Mising Input")
+        #     else:
+        #         review_data = {
+        #             "Description": review,
+        #             "Offer": True,
+        #             "ApplicationRating": difficulty,
+        #             "EnvironmentRating": env_rating,
+        #             "EnjoymentRating": enjoyment_rating,
+        #             "Applied": True,
+        #             "AppliedDate": date_applied,
+        #             "ResposeDate": date_results,
+        #             "PositionID": None
+        #         }
+        #         logger.info(f"Product form submitted with data: {review_data}")
+        #         try:
+        #             # using the requests library to POST to /p/product.  Passing
+        #             # product_data to the endpoint through the json parameter.
+        #             # This particular end point is located in the products_routes.py
+        #             # file found in api/backend/products folder. 
+        #             response = requests.post('http://api:4000/p/product', json=review_data)
+        #             if response.status_code == 200:
+        #                 st.success("Product added successfully!")
+        #             else:
+        #                 st.error(f"Error adding product: {response.text}")
+        #         except requests.exceptions.RequestException as e:
+                    # st.error(f"Error connecting to server: {str(e)}")
 
-results = requests.get(f'http://api:4000/PostStats').json()
-st.dataframe(results)
 
 # Either a get route that automatically runs to show all co-ops that can be reviewed
 # Or a form that can be filled out then submitted as a put route to enter info into
