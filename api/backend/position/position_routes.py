@@ -19,11 +19,11 @@ position = Blueprint('position', __name__)
 @position.route('/Position/PosStats/YieldRate', methods=['GET'])
 def get_positions_by_yield_rate():
     query = '''
-        SELECT pt.*, pst.yield_rate 
-        FROM positiontable pt 
-        JOIN positionstatstable pst 
-        ON pt.position_id = pst.position_id 
-        ORDER BY pst.yield_rate
+        SELECT pt.*, pst.YieldRate 
+        FROM PositionTable pt 
+        JOIN PosStats pst 
+        ON pt.PositionID = pst.PositionID 
+        ORDER BY pst.YieldRate
     '''
     cursor = db.get_db().cursor()
     cursor.execute(query)
