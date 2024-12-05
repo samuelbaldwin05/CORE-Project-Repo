@@ -68,15 +68,11 @@ if choice == 'Rejected':
                 }
                 logger.info(f"Reject form submitted with data: {review_data1}")
                 try:
-                    # using the requests library to POST to /p/product.  Passing
-                    # product_data to the endpoint through the json parameter.
-                    # This particular end point is located in the products_routes.py
-                    # file found in api/backend/products folder. 
                     response = requests.post('http://api:4000/p/PositionReview/post', json=review_data1)
                     if response.status_code == 200:
-                        st.success("Product added successfully!")
+                        st.success("Review added successfully!")
                     else:
-                        st.error(f"Error adding product: {response.text}")
+                        st.error(f"Error adding Review: {response.text}")
                 except requests.exceptions.RequestException as e:
                     st.error(f"Error connecting to server: {str(e)}")
     st.subheader("Position Stat Form")  
@@ -99,15 +95,11 @@ if choice == 'Rejected':
                 }
                 logger.info(f"Reject stat form submitted with data: {review_data}")
                 try:
-                    # using the requests library to POST to /p/product.  Passing
-                    # product_data to the endpoint through the json parameter.
-                    # This particular end point is located in the products_routes.py
-                    # file found in api/backend/products folder. 
                     response = requests.put(f'http://api:4000/p/posstats/{posID}', json=review_data)
                     if response.status_code == 200:
-                        st.success("Product added successfully!")
+                        st.success("Review added successfully!")
                     else:
-                        st.error(f"Error adding product: {response.text}")
+                        st.error(f"Error adding Review: {response.text}")
                 except requests.exceptions.RequestException as e:
                     st.error(f"Error connecting to server: {str(e)}")
 
@@ -116,7 +108,7 @@ if choice == 'Interview Stage':
     st.subheader("Position Review Form")
     with st.form(key='IntForm'):
         difficulty = st.number_input('Application Difficulty Rating (1-5)', 1, 5)
-        data_applied = st.date_input('Date of Application')
+        date_applied = st.date_input('Date of Application')
         date_results = st.date_input('Date of Results')
         review = st.text_input('Review Space')
         submit_button = st.form_submit_button(label='Submit')
@@ -139,15 +131,11 @@ if choice == 'Interview Stage':
                 }
                 logger.info(f"Reject form submitted with data: {review_data1}")
                 try:
-                    # using the requests library to POST to /p/product.  Passing
-                    # product_data to the endpoint through the json parameter.
-                    # This particular end point is located in the products_routes.py
-                    # file found in api/backend/products folder. 
                     response = requests.post('http://api:4000/p/PositionReview/post', json=review_data1)
                     if response.status_code == 200:
-                        st.success("Product added successfully!")
+                        st.success("Review added successfully!")
                     else:
-                        st.error(f"Error adding product: {response.text}")
+                        st.error(f"Error adding review: {response.text}")
                 except requests.exceptions.RequestException as e:
                     st.error(f"Error connecting to server: {str(e)}")
     st.subheader("Position Stat Form")  
@@ -172,15 +160,11 @@ if choice == 'Interview Stage':
                 }
                 logger.info(f"Reject stat form submitted with data: {review_data}")
                 try:
-                    # using the requests library to POST to /p/product.  Passing
-                    # product_data to the endpoint through the json parameter.
-                    # This particular end point is located in the products_routes.py
-                    # file found in api/backend/products folder. 
                     response = requests.put(f'http://api:4000/p/posstats/{posID}', json=review_data)
                     if response.status_code == 200:
-                        st.success("Product added successfully!")
+                        st.success("Review added successfully!")
                     else:
-                        st.error(f"Error adding product: {response.text}")
+                        st.error(f"Error adding Review: {response.text}")
                 except requests.exceptions.RequestException as e:
                     st.error(f"Error connecting to server: {str(e)}")
 
@@ -190,13 +174,13 @@ if choice == 'Offered Job':
      st.subheader("Position Review Form")
      with st.form(key='OfferForm'):
         difficulty = st.number_input('Application Difficulty Rating (1-5)', 1, 5)
-        data_applied = st.date_input('Date of Application')
+        date_applied = st.date_input('Date of Application')
         date_results = st.date_input('Date of Results')
         review = st.text_input('Review Space')
         submit_button = st.form_submit_button(label='Submit')
         # Posting data to database
         if submit_button:
-            if not difficulty or not date_results or not date_applied or not gpa or not review:
+            if not difficulty or not date_results or not date_applied or not review:
                 st.error("Mising Input")
             else:
                 review_data = {
@@ -207,21 +191,17 @@ if choice == 'Offered Job':
                     "EducationRating": None,        
                     "EnjoymentRating": None,
                     "Applied": True,
-                    "AppliedDate": date_applied,
-                    "ResposeDate": date_results,
+                    "AppliedDate": date_applied.isoformat(),
+                    "ResponseDate": date_results.isoformat(),
                     "PositionID": posID
                 }
-                logger.info(f"Product form submitted with data: {review_data}")
+                logger.info(f"Review form submitted with data: {review_data}")
                 try:
-                    # using the requests library to POST to /p/product.  Passing
-                    # product_data to the endpoint through the json parameter.
-                    # This particular end point is located in the products_routes.py
-                    # file found in api/backend/products folder. 
-                    response = requests.post('http://api:4000/p/product', json=review_data)
+                    response = requests.post('http://api:4000/p/PositionReview/post', json=review_data)
                     if response.status_code == 200:
-                        st.success("Product added successfully!")
+                        st.success("Review added successfully!")
                     else:
-                        st.error(f"Error adding product: {response.text}")
+                        st.error(f"Error adding Review: {response.text}")
                 except requests.exceptions.RequestException as e:
                     st.error(f"Error connecting to server: {str(e)}")
      st.subheader("Position Stat Form")
@@ -246,15 +226,11 @@ if choice == 'Offered Job':
                 }
                 logger.info(f"Reject stat form submitted with data: {review_data}")
                 try:
-                    # using the requests library to POST to /p/product.  Passing
-                    # product_data to the endpoint through the json parameter.
-                    # This particular end point is located in the products_routes.py
-                    # file found in api/backend/products folder. 
                     response = requests.put(f'http://api:4000/p/posstats/{posID}', json=review_data)
                     if response.status_code == 200:
-                        st.success("Product added successfully!")
+                        st.success("Review added successfully!")
                     else:
-                        st.error(f"Error adding product: {response.text}")
+                        st.error(f"Error adding Review: {response.text}")
                 except requests.exceptions.RequestException as e:
                     st.error(f"Error connecting to server: {str(e)}")
 
@@ -264,7 +240,7 @@ if choice == 'Took Position':
     st.subheader("Position Review Form")
     with st.form(key='PosWorkForm'):
         difficulty = st.number_input('Application Difficulty Rating (1-5)', 1, 5)
-        data_applied = st.date_input('Date of Application')
+        date_applied = st.date_input('Date of Application')
         date_results = st.date_input('Date of Results')
         env_rating = st.number_input('Rating of Environment While Working (1-5)', 1, 5)
         education_rating = st.number_input('Rating of Education Received While Working (1-5)', 1, 5)
@@ -274,7 +250,7 @@ if choice == 'Took Position':
         submit_button = st.form_submit_button(label='Submit')
         # Posting data to database
         if submit_button:
-            if not difficulty or not date_results or not date_applied or not gpa or not review:
+            if not difficulty or not date_results or not date_applied or not review:
                 st.error("Mising Input")
             else:
                 review_data = {
@@ -285,21 +261,17 @@ if choice == 'Took Position':
                     "EducationRating": education_rating,
                     "EnjoymentRating": enjoyment_rating,
                     "Applied": True,
-                    "AppliedDate": date_applied,
-                    "ResponseDate": date_results,
+                    "AppliedDate": date_applied.isoformat(),
+                    "ResponseDate": date_results.isoformat(),
                     "PositionID": posID
                 }
-                logger.info(f"Product form submitted with data: {review_data}")
+                logger.info(f"Review form submitted with data: {review_data}")
                 try:
-                    # using the requests library to POST to /p/product.  Passing
-                    # product_data to the endpoint through the json parameter.
-                    # This particular end point is located in the products_routes.py
-                    # file found in api/backend/products folder. 
-                    response = requests.post('http://api:4000/p/product', json=review_data)
+                    response = requests.post('http://api:4000/p/PositionReview/post', json=review_data)
                     if response.status_code == 200:
-                        st.success("Product added successfully!")
+                        st.success("Review added successfully!")
                     else:
-                        st.error(f"Error adding product: {response.text}")
+                        st.error(f"Error adding review: {response.text}")
                 except requests.exceptions.RequestException as e:
                     st.error(f"Error connecting to server: {str(e)}")
     st.subheader("Position Stat Form")
@@ -324,14 +296,10 @@ if choice == 'Took Position':
                 }
                 logger.info(f"Reject stat form submitted with data: {review_data}")
                 try:
-                    # using the requests library to POST to /p/product.  Passing
-                    # product_data to the endpoint through the json parameter.
-                    # This particular end point is located in the products_routes.py
-                    # file found in api/backend/products folder. 
                     response = requests.put(f'http://api:4000/p/posstats/{posID}', json=review_data)
                     if response.status_code == 200:
-                        st.success("Product added successfully!")
+                        st.success("Review added successfully!")
                     else:
-                        st.error(f"Error adding product: {response.text}")
+                        st.error(f"Error adding review: {response.text}")
                 except requests.exceptions.RequestException as e:
                     st.error(f"Error connecting to server: {str(e)}")
