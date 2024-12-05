@@ -105,7 +105,7 @@ def add_com_review():
     return jsonify({'message': 'Review added successfully'}), 200
 
 # Update company name
-@company.route('/Company/int<CompanyID>', methods=['PUT'])
+@company.route('/Company/<int:CompanyID>', methods=['PUT'])
 def update_company_name(CompanyID):
     data = request.json
     query = '''
@@ -172,3 +172,30 @@ def delete_company_review(ComReviewID):
     response.status_code = 200
     
     return response
+
+@company.route('/Company/stats', methods=['GET'])
+def get_average_company_stats():
+    """
+    Get averaged stats grouped by company from CompanyReview and Company tables.
+    Returns:
+        JSON response with averaged stats grouped by company.
+    """
+    query = """
+        SELECT 
+            c.CompanyID,
+            c.Name AS CompanyName,
+            c.Industry,
+            c.CompanySize,
+            AVG(cr.EnvironmentRating) AS AvgEnvironmentRating,
+            AVG(cr.CultureRating) AS AvgCultureRating,
+            COUNT(cr.ComReviewID) AS TotalReviews
+        FROM Company c
+        LEFT JOIN CompanyReview cr ON c.CompanyID = cr.CompanyId
+        GROUP BY c.CompanyID, c.Name, c.Industry, c.CompanySize
+    """
+    cursor = db.get_db().cursor()
+
+    # use cursor to query the database for companies by city
+    cursor.execute(query)
+    results = cursor.fetchall()
+    return jsonify(results), 200

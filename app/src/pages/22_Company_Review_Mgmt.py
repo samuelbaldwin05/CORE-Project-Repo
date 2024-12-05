@@ -43,12 +43,11 @@ with col2:
                         # file found in api/backend/products folder. 
             response = requests.put(f'http://api:4000/c/Company/{company_id}', json=company_update)
             if response.status_code == 200:
-                st.write("Hurray")
-            else: st.write(response.text)
+                st.write(f"Updated, Refresh page to view")
         except:
             print("not cool")
-        company_data = fetch_data()
+
             
             # Update the selectbox dynamically
-        selected_company = st.selectbox("Choose a company", company_data["CompanyName"].unique())
-    st.experimental_rerun()
+        
+   
