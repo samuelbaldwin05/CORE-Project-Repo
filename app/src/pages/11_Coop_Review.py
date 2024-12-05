@@ -79,7 +79,7 @@ if choice == 'Rejected':
                         st.error(f"Error adding product: {response.text}")
                 except requests.exceptions.RequestException as e:
                     st.error(f"Error connecting to server: {str(e)}")
-
+    st.subheader("Position Stat Form")  
     with st.form(key='rejectstatform'):
         gpa = st.number_input('GPA')
         submit_button = st.form_submit_button(label='Submit')
@@ -150,7 +150,7 @@ if choice == 'Interview Stage':
                         st.error(f"Error adding product: {response.text}")
                 except requests.exceptions.RequestException as e:
                     st.error(f"Error connecting to server: {str(e)}")
-
+    st.subheader("Position Stat Form")  
     with st.form(key='rejectstatform'):
         gpa = st.number_input('GPA')
         interviewnum = st.number_input('Number of Interviews Had')
@@ -224,7 +224,7 @@ if choice == 'Offered Job':
                         st.error(f"Error adding product: {response.text}")
                 except requests.exceptions.RequestException as e:
                     st.error(f"Error connecting to server: {str(e)}")
-
+        st.subheader("Position Stat Form")
         with st.form(key='rejectstatform'):
             gpa = st.number_input('GPA')
             interviewnum = st.number_input('Number of Interviews Had')
@@ -296,6 +296,39 @@ if choice == 'Took Position':
                     # This particular end point is located in the products_routes.py
                     # file found in api/backend/products folder. 
                     response = requests.post('http://api:4000/p/product', json=review_data)
+                    if response.status_code == 200:
+                        st.success("Product added successfully!")
+                    else:
+                        st.error(f"Error adding product: {response.text}")
+                except requests.exceptions.RequestException as e:
+                    st.error(f"Error connecting to server: {str(e)}")
+    st.subheader("Position Stat Form")
+    with st.form(key='rejectstatform'):
+        gpa = st.number_input('GPA')
+        interviewnum = st.number_input('Number of Interviews Had')
+        inttime = st.number_input('Estimated Interview Time in Mins')
+        submit_button = st.form_submit_button(label='Submit')
+        # Posting data to database
+        if submit_button:
+            if gpa == 0 or inttime == 0 or interviewnum == 0 :
+                st.error("Mising Input")
+            else:
+                review_data = {
+                    "YieldRate": 1,
+                    "AvgAppAmount": 1,
+                    "AvgInterview": interviewnum,
+                    "AvgGpa": gpa,
+                    "AvgLearning": education_rating,
+                    "AvgEnvironment": env_rating,
+                    "AvgInterviewTime": inttime,
+                }
+                logger.info(f"Reject stat form submitted with data: {review_data}")
+                try:
+                    # using the requests library to POST to /p/product.  Passing
+                    # product_data to the endpoint through the json parameter.
+                    # This particular end point is located in the products_routes.py
+                    # file found in api/backend/products folder. 
+                    response = requests.put(f'http://api:4000/p/posstats/{posID}', json=review_data)
                     if response.status_code == 200:
                         st.success("Product added successfully!")
                     else:

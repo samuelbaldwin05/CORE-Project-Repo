@@ -12,6 +12,28 @@ SideBarLinks()
 # Creating title and getting relationship of user to the company
 st.title("Review a Company")
 
+
+# Getting position data to select position under review
+def fetch_data():
+    url = f'http://api:4000/c/Company'
+    response = requests.get(url)
+    response.raise_for_status()  
+    data = response.json()
+    return pd.DataFrame(data)
+
+# Getting PositionID
+df = fetch_data()
+position = st.selectbox("Select Position", df['Name'].unique())
+index = df.index[df['Name'] == position].tolist()
+if index:
+    posID = int(df.loc[index[0], 'CompanyID'])
+    st.write(f"**CompanyID**: {posID}")
+else:
+    posID = None
+    st.error("No PositionID found for the selected position.")
+
+
+
 menu = ['Applied To Work For', 'Worked For']
 choice = st.selectbox("Connection To Company", menu)
 
