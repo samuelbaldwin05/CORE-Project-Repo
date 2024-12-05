@@ -13,6 +13,20 @@ from backend.ml_models.model01 import predict
 # routes.
 users = Blueprint('users', __name__)
 
+# Route for all user data
+@users.route('/users', methods=['GET'])
+def get_users():
+
+    query = f'''SELECT *
+                FROM Users;
+    '''
+
+    cursor = db.get_db().cursor()
+    cursor.execute(query)
+    theData = cursor.fetchall() 
+    response = make_response(jsonify(theData))
+    response.status_code = 200
+    return response
 
 # GET route for Persona2, retrieves student data under specfic advisor
 @users.route('/users/<int:advisorid>', methods=['GET'])
@@ -141,24 +155,16 @@ def add_new_user():
 
 # DELETE Route for Persona 4, allows system administrator to remove users
 
-@users.route('/users/remove_user/<nuid>', methods=['DELETE'])
+@users.route('/deleteusers/<int:nuid>', methods=['DELETE'])
 def remove_user(nuid):
     query = f'''
         DELETE FROM Users
         WHERE NUID = {nuid}
     '''
-    
-    current_app.logger.info(f'DELETE /users/remove_user/<nuid> query={query}')
-    
     cursor = db.get_db().cursor()
     cursor.execute(query)
     db.get_db().commit()
-    
-    current_app.logger.info(f'DELETE /users/remove_user/<nuid> User with NUID={nuid} deleted')
-    
-    response = make_response(jsonify({'message': f'User with NUID {nuid} successfully removed'}))
-    response.status_code = 200
-    return response
+    return jsonify({'message': f'User with NUID {nuid} successfully removed'}), 200
 
 # ------------------------------------------------------------
 

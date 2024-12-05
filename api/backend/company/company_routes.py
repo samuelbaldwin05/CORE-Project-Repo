@@ -120,6 +120,44 @@ def update_company_name(CompanyID):
     
     return jsonify({'message': f'Company name for CompanyID {CompanyID} updated successfully.'}), 200
 
+# Get all company reviews
+@company.route('/CompanyReview', methods=['GET'])
+def get_all_company_reviews():
+    query = f'''
+        SELECT * 
+        FROM CompanyReview cr
+        LEFT JOIN CompanyReviewers crr ON cr.ComReviewID = crr.ComReviewID
+        LEFT JOIN Users u ON crr.NUID = u.NUID;
+    '''
+    
+    # get a cursor object from the database
+    cursor = db.get_db().cursor()
+
+    # use cursor to query the database for reviews
+    cursor.execute(query)
+
+    # fetch all the data from the cursor
+    theData = cursor.fetchall()
+
+    # Create a HTTP Response object and add results of the query to it after "jsonify"-ing it.
+    response = make_response(jsonify(theData))
+    response.status_code = 200
+    return response
+
+# Delete Company
+@company.route('/Company/<int:CompanyID>', methods=['DELETE'])
+def delete_company(CompanyID):
+    query = f'''
+        DELETE FROM Company
+        WHERE CompanyID = {CompanyID}
+    '''
+    current_app.logger.info(query)
+
+    # executing and committing the delete statement 
+    cursor = db.get_db().cursor()
+    cursor.execute(query)
+    db.get_db().commit()
+    return jsonify({'message': f'Position with ID {CompanyID} deleted successfully.'}), 200
 
 # Get all reviews for a company
 @company.route('/CompanyReview/<CompanyID>', methods=['GET'])
@@ -159,15 +197,17 @@ def add_company_review(CompanyID):
     return response
 
 # Delete a review by ComReviewID
-@company.route('/CompanyReview/<ComReviewID>', methods=['DELETE'])
+@company.route('/CompanyReview/<int:ComReviewID>', methods=['DELETE'])
 def delete_company_review(ComReviewID):
     query = f'''
-        DELETE FROM company_review WHERE com_review_id = {ComReviewID}
+        DELETE FROM CompanyReview 
+        WHERE ComReviewId = {ComReviewID}
     '''
     current_app.logger.info(query)
     cursor = db.get_db().cursor()
     cursor.execute(query)
     db.get_db().commit()
+<<<<<<< Updated upstream
     response = make_response("Successfully deleted review")
     response.status_code = 200
     
@@ -199,3 +239,6 @@ def get_average_company_stats():
     cursor.execute(query)
     results = cursor.fetchall()
     return jsonify(results), 200
+=======
+    return jsonify({'message': f'Position with ID {ComReviewID} deleted successfully.'}), 200
+>>>>>>> Stashed changes

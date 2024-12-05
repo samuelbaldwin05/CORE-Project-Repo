@@ -81,7 +81,7 @@ def AdminPageNav():
         "pages/20_Admin_Home.py", label="System Admin", icon="🖥️"
     )
     st.sidebar.page_link(
-        "pages/21_Coop_Review_Mgmt.py", label="Coop Review Management", icon="🏢"
+        "pages/21_Coop_Review_Mgmt.py", label="Delete Incorrect Data", icon="🗑️"
     )
     st.sidebar.page_link(
         "pages/22_Company_Review_Mgmt.py", label="Company Review Management", icon="🏢"

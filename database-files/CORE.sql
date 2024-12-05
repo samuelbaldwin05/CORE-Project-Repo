@@ -88,7 +88,7 @@ CREATE TABLE JobPosting (
         ON UPDATE cascade ON DELETE cascade,
     CONSTRAINT JPC FOREIGN KEY (CompanyID)
         REFERENCES Company(CompanyID)
-        ON UPDATE cascade ON DELETE restrict
+        ON UPDATE cascade ON DELETE cascade
 );
 
 -- Step 5: Tables with Foreign Keys to Tables in Step 4
@@ -116,7 +116,7 @@ CREATE TABLE PositionReviewers (
     PRIMARY KEY (NUID, PosReviewID),
     CONSTRAINT PRU FOREIGN KEY (NUID)
         REFERENCES Users(NUID)
-        ON UPDATE cascade ON DELETE restrict,
+        ON UPDATE cascade ON DELETE cascade,
     CONSTRAINT PRPR FOREIGN KEY (PosReviewID)
         REFERENCES PositionReview(PosReviewID)
         ON UPDATE cascade ON DELETE cascade
@@ -132,7 +132,7 @@ CREATE TABLE CompanyReview (
     CultureRating TINYINT(5),
     CONSTRAINT CRC FOREIGN KEY (CompanyId)
         REFERENCES Company(CompanyID)
-        ON UPDATE cascade ON DELETE RESTRICT
+        ON UPDATE cascade ON DELETE cascade
 );
 
 CREATE TABLE CompanyReviewers (
@@ -141,7 +141,7 @@ CREATE TABLE CompanyReviewers (
     PRIMARY KEY (NUID, ComReviewID),
     CONSTRAINT CRU FOREIGN KEY (NUID)
         REFERENCES Users(NUID)
-        ON UPDATE cascade ON DELETE restrict,
+        ON UPDATE cascade ON DELETE cascade,
     CONSTRAINT CRCR FOREIGN KEY (ComReviewID)
         REFERENCES CompanyReview(ComReviewID)
         ON UPDATE cascade ON DELETE cascade
@@ -173,7 +173,7 @@ CREATE TABLE PostStats (
     MeanResponseTime Time,
     CONSTRAINT POS FOREIGN KEY (PostingID)
         REFERENCES JobPosting(PostingID)
-        ON UPDATE cascade ON DELETE restrict
+        ON UPDATE cascade ON DELETE cascade
 );
 
 

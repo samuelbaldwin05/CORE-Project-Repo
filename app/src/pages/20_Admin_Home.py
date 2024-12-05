@@ -11,7 +11,7 @@ SideBarLinks()
 
 st.title('System Admin Home Page')
 
-if st.button('Manage Company Reviews',
+if st.button('Delete Incorrect Data',
              type='primary',
              use_container_width=True):
   st.switch_page('pages/21_Coop_Review_Mgmt.py')
