@@ -39,13 +39,41 @@ if choice == 'Rejected':
     st.subheader("Position Form")
     with st.form(key='RejectForm'):
         difficulty = st.number_input('Application Difficulty Rating (1-5)', 1, 5)
-        data_applied = st.date_input('Date of Application')
+        date_applied = st.date_input('Date of Application')
         date_results = st.date_input('Date of Results')
         gpa = st.number_input('GPA')
         review = st.text_input('Review Space')
         appyield = 0
         interviewnum = 0
         submit_button = st.form_submit_button(label='Submit')
+        # if submit_button:
+        #     if not difficulty or not date_results or not date_applied or not gpa or not review:
+        #         st.error("Mising Input")
+        #     else:
+        #         review_data = {
+        #             "Description": review,
+        #             "Offer": False,
+        #             "ApplicationRating": None,
+        #             "EnvironmentRating": None,
+        #             "EnjoymentRating": None,
+        #             "Applied": True,
+        #             "AppliedDate": date_applied,
+        #             "ResposeDate": date_results,
+        #             "PositionID": None
+        #         }
+        #         logger.info(f"Product form submitted with data: {review_data}")
+        #         try:
+        #             # using the requests library to POST to /p/product.  Passing
+        #             # product_data to the endpoint through the json parameter.
+        #             # This particular end point is located in the products_routes.py
+        #             # file found in api/backend/products folder. 
+        #             response = requests.post('http://api:4000/p/product', json=review_data)
+        #             if response.status_code == 200:
+        #                 st.success("Product added successfully!")
+        #             else:
+        #                 st.error(f"Error adding product: {response.text}")
+        #         except requests.exceptions.RequestException as e:
+                    # st.error(f"Error connecting to server: {str(e)}")
 
 if choice == 'Interview Stage':
     with st.form(key='IntForm'):
