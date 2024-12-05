@@ -224,3 +224,31 @@ def get_user_reviews(nuid):
     return response
 
 # ------------------------------------------------------------
+
+# ------------------------------------------------------------
+
+# PUT Route for Cammy, allows advisor to update Users GPA
+
+@users.route('/users/update/<int:nuid>', methods=['PUT'])
+def update_user_data(nuid):
+    data = request.json
+    query = '''
+        UPDATE Users
+        SET Username = %s,
+            MajorID = %s,
+            GPA = %s,
+            AdvisorId = %s,
+            AppCount = %s,
+            OfferCount = %s,
+            PreviousCount = %s
+        WHERE NUID = %s
+    '''
+    params = (
+        data['Username'], data['MajorID'], data['GPA'],
+        data['AdvisorId'], data['AppCount'], data['OfferCount'],
+        data['PreviousCount'], nuid
+    )
+    cursor = db.get_db().cursor()
+    cursor.execute(query, params)
+    db.get_db().commit()
+    return jsonify({'message': f'User data for NUID {nuid} updated successfully.'}), 200

@@ -41,42 +41,53 @@ st.dataframe(df)
 # Getting operaiton info
 choice = st.selectbox("What Would You Like To Do?", ['Alter Student', 'Add Student'])
 
-# Creating form for student data alteration
+# Form for wanting to alter students
 if choice == 'Alter Student':
-    position = st.selectbox("Select Student", df['NUID'].unique())
-    index = df.index[df['NUID'] == position].tolist()
-    index = index[0]
+    nuid = st.selectbox("Select Student", df['NUID'].unique())
+    index = df.index[df['NUID'] == nuid].tolist()
+    index = index[0] if index else None
     st.write("Only fill out sections you would like to change.")
+    
     with st.form(key='student_alterations'):
-        nuid = st.number_input("NUID")
         username = st.text_input("Username")
+        majorid = st.number_input("MajorID")
         gpa = st.number_input("GPA")
+        advisorid = st.number_input("AdvisorID")
         appcount = st.number_input("Application Count")
-        offercount = st.numer_input('Offer Count')
-        previous_offercount = st.numer_input('Offer Count')
+        offercount = st.number_input('Offer Count')
+        previous_offercount = st.number_input('Previous Offer Count')
         submit_button = st.form_submit_button(label='Submit')
+
+        # Making values None if not filled out
+        username = username if username else None
+        majorid = majorid if majorid != 0 else None
+        gpa = gpa if gpa != 0 else None
+        advisorid = advisorid if advisorid != 0 else None
+        appcount = appcount if appcount != 0 else None
+        offercount = offercount if offercount != 0 else None
+        previous_offercount = previous_offercount if previous_offercount != 0 else None
+
         if submit_button:
-            if not nuid and not username and not gpa and not appcount and not offercount and not previous_offercount:
-                st.error("Mising Input")
+            if not username and not gpa and not appcount and not offercount and not previous_offercount:
+                st.error("Missing Input")
             else:
                 comreview_data = {
-                    "NUID": comID,
-                    "Type": type,
-                    "Description": review,
-                    "EnvironmentRating": env_rating,
-                    "CultureRating": culture_rating
+                    "Username": username,
+                    "MajorID": majorid,
+                    "GPA": gpa,
+                    "AdvisorId": advisorid,
+                    "AppCount": appcount,
+                    "OfferCount": offercount,
+                    "PreviousCount": previous_offercount
                 }
-                logger.info(f"Product form submitted with data: {comreview_data}")
+                logger.info(f"User data alteration form submitted with data: {comreview_data}")
+                
                 try:
-                    # using the requests library to POST to /p/product.  Passing
-                    # product_data to the endpoint through the json parameter.
-                    # This particular end point is located in the products_routes.py
-                    # file found in api/backend/products folder. 
-                    response = requests.post('http://api:4000/c/CompanyReview', json=comreview_data)
+                    # Using PUT instead of POST
+                    response = requests.put(f'http://api:4000/u/users/update/{nuid}', json=comreview_data)
                     if response.status_code == 200:
-                        st.success("Product added successfully!")
+                        st.success("User data updated successfully!")
                     else:
-                        st.error(f"Error adding product: {response.text}")
+                        st.error(f"Error updating user data: {response.text}")
                 except requests.exceptions.RequestException as e:
                     st.error(f"Error connecting to server: {str(e)}")
-
