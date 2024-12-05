@@ -4,7 +4,7 @@ logger = logging.getLogger(__name__)
 import streamlit as st
 from modules.nav import SideBarLinks
 
-st.set_page_config(layout = 'wide')
+st.set_page_config(layout = 'wide', page_title = 'Student Home', page_icon = 'static/core-4.png')
 
 # Show appropriate sidebar links for the role of the currently logged in user
 SideBarLinks()
@@ -14,17 +14,17 @@ st.write('')
 st.write('')
 st.write('### What would you like to do today?')
 
-if st.button('View Coop Reviews',
+if st.button('Search By Position',
              type='primary',
              use_container_width=True):
   st.switch_page('pages/01_View_Coops.py')
 
-if st.button('View Company Reviews',
+if st.button('Search By Company',
              type='primary',
              use_container_width=True):
   st.switch_page('pages/02_View_Companies.py')
 
-if st.button('View Job Postings',
+if st.button('View All Job Postings',
              type='primary',
              use_container_width=True):
   st.switch_page('pages/03_View_Job_Postings.py')

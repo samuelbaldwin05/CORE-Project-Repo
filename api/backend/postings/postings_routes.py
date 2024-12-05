@@ -26,15 +26,6 @@ def get_job_postings_by_position(PositionID):
     data = cursor.fetchall()
     return jsonify(data), 200
 
-# Get job postings by PositionID
-@job_posting.route('/JobPosting/<int:CompanyID>', methods=['GET'])
-def get_job_postings_by_position(PositionID):
-    query = 'SELECT * FROM JobPosting WHERE CompanyID = %s'
-    cursor = db.get_db().cursor()
-    cursor.execute(query, (PositionID,))
-    data = cursor.fetchall()
-    return jsonify(data), 200
-
 # Add a new job posting
 @job_posting.route('/JobPosting', methods=['POST'])
 def add_new_job_posting():

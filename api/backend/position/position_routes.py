@@ -19,11 +19,11 @@ position = Blueprint('position', __name__)
 @position.route('/Position/PosStats/YieldRate', methods=['GET'])
 def get_positions_by_yield_rate():
     query = '''
-        SELECT pt.*, pst.yield_rate 
-        FROM positiontable pt 
-        JOIN positionstatstable pst 
-        ON pt.position_id = pst.position_id 
-        ORDER BY pst.yield_rate
+        SELECT pt.*, pst.YieldRate 
+        FROM PositionTable pt 
+        JOIN PosStats pst 
+        ON pt.PositionID = pst.PositionID 
+        ORDER BY pst.YieldRate
     '''
     cursor = db.get_db().cursor()
     cursor.execute(query)
@@ -81,7 +81,7 @@ def add_new_position():
     cursor = db.get_db().cursor()
     cursor.execute(query, params)
     db.get_db().commit()
-    return jsonify({'message': 'Position added successfully'}), 201
+    return jsonify({'message': 'Position added successfully'}), 200
 
 
 # ------------------------------------------------------------
@@ -91,19 +91,25 @@ def update_posstats(PositionID):
     data = request.json
     query = '''
         UPDATE PosStats
-        SET AppCount = %s,
-            InterviewAmount = %s,
-            OfferAmount = %s,
-            AcceptanceAmount = %s,
-            CallbackAmount = %s,
-            AvgResponseTime = %s
+        SET YieldRate = %s,
+            AvgAppAmount = %s,
+            AvgInterview = %s,
+            AvgGpa = %s,
+            AvgLearning = %s,
+            AvgEnvironment = %s,
+            AvgInterviewTime = %s
         WHERE PositionID = %s
     '''
-    params = (data['AppCount'], data['InterviewAmount'], data['OfferAmount'], data['AcceptanceAmount'], data['CallbackAmount'], data['AvgResponseTime'], PositionID)
+    params = (
+        data['YieldRate'], data['AvgAppAmount'], data['AvgInterview'],
+        data['AvgGpa'], data['AvgLearning'], data['AvgEnvironment'],
+        data['AvgInterviewTime'], PositionID
+    )
     cursor = db.get_db().cursor()
     cursor.execute(query, params)
     db.get_db().commit()
     return jsonify({'message': f'Position stats for PositionID {PositionID} updated successfully.'}), 200
+
 
 
 # ------------------------------------------------------------
@@ -117,22 +123,66 @@ def remove_position(PositionID):
     return jsonify({'message': f'Position with ID {PositionID} deleted successfully.'}), 200
 
 
-@position.route('/PositionReview/<int:PositionID>', methods=['GET'])
-def get_reviews_by_position(PositionID):
+@position.route('/PositionReview', methods=['GET'])
+def get_posreviews():
     query = '''
-        SELECT *
-        FROM PositionReview
-        WHERE PositionID = %s
-    '''
+            SELECT *
+            FROM PositionReview pr
+            LEFT JOIN PositionReviewers prr ON pr.PosReviewID = prr.PosReviewID
+            LEFT JOIN Users u ON prr.NUID = u.NUID;
+        '''
     cursor = db.get_db().cursor()
-    cursor.execute(query, (PositionID,))
+    cursor.execute(query)
     reviews = cursor.fetchall()
     return jsonify(reviews), 200
 
+# BREAK INTO MULTIPLE ROUTES - first route gets PositionID from PositionName, 
+# second connects PositionID to PositionStats
+# third connects PositionID to PositionReviews
+# beneficial as it allows search by company to use same routes
+@position.route('/positions/info', methods=['GET'])
+def get_posinfo():
+    query = '''
+            SELECT ps.YieldRate, ps.AvgAppAmount, ps.AvgInterview,
+                ps.AvgEnvironment,  ps.AvgGpa, ps.AvgLearning,
+
+                pr.Description AS PositionReview, pr.ResponseDate,
+                pr.Offer, pr.ApplicationRating, pr.EnvironmentRating, pr.EducationRating,
+                pr.EnjoymentRating, pr.Applied, pr.AppliedDate,
+
+                pt.PositionID, pt.PositionName, pt.Description AS PositionDescription,
+
+                u.Username
+
+            FROM PositionTable pt
+            LEFT JOIN PosStats ps ON pt.PositionID = ps.PositionID
+            LEFT JOIN PositionReview pr ON pt.PositionID = pr.PositionID
+            LEFT JOIN PositionReviewers prr ON pr.PosReviewID = prr.PosReviewID
+            LEFT JOIN Users u ON prr.NUID = u.NUID;
+        '''
+    cursor = db.get_db().cursor()
+    cursor.execute(query)
+    reviews = cursor.fetchall()
+    return jsonify(reviews), 200
+
+@position.route('/PositionReview/<int:PositionID>', methods=['GET'])
+def get_reviews_by_position(PositionID=None):
+    query = '''
+            SELECT *
+            FROM PositionReview
+            WHERE PositionID = %s
+        '''
+    params = (PositionID,)
+
+
+    cursor = db.get_db().cursor()
+    cursor.execute(query, params)
+    reviews = cursor.fetchall()
+    return jsonify(reviews), 200
 
 # creating a new route for a specific position
-@position.route('/PositionReview/<int:PositionID>', methods=['POST'])
-def add_review(PositionID):
+@position.route('/PositionReview/post', methods=['POST'])
+def add_review():
     data = request.json  # Expecting JSON input
     query = '''
         INSERT INTO PositionReview (
@@ -146,12 +196,12 @@ def add_review(PositionID):
         data['Description'], data['Offer'], data['ApplicationRating'],
         data['EnvironmentRating'], data['EducationRating'], 
         data['EnjoymentRating'], data['Applied'], data['AppliedDate'],
-        data['ResponseDate'], PositionID
+        data['ResponseDate'], data['PositionID']
     )
     cursor = db.get_db().cursor()
     cursor.execute(query, params)
     db.get_db().commit()
-    return jsonify({'message': 'Review added successfully'}), 201
+    return jsonify({'message': 'Review added successfully'}), 200
 
 
 # deleting reviews

@@ -86,6 +86,67 @@ def get_companies_by_city(City):
     response.status_code = 200
     return response
 
+
+# Get all company data
+@company.route('/Company', methods=['GET'])
+def get_all_companies():
+    query = f'''
+        SELECT *
+        FROM Company
+    '''
+    
+    # get a cursor object from the database
+    cursor = db.get_db().cursor()
+
+    # use cursor to query the database for companies by city
+    cursor.execute(query)
+
+    # fetch all the data from the cursor
+    theData = cursor.fetchall()
+
+    # Create a HTTP Response object and add results of the query to it after "jsonify"-ing it.
+    response = make_response(jsonify(theData))
+    response.status_code = 200
+    return response
+
+# Create new company review
+@company.route('/CompanyReview', methods=['POST'])
+def add_com_review():
+    data = request.json  # Expecting JSON input
+    query = '''
+        INSERT INTO CompanyReview (
+            CompanyId, Type, Description, EnvironmentRating,
+            CultureRating
+        )
+        VALUES (%s, %s, %s, %s, %s)
+    '''
+    params = (
+        data['CompanyId'], data['Type'], data['Description'],
+        data['EnvironmentRating'], data['CultureRating']
+    )
+    cursor = db.get_db().cursor()
+    cursor.execute(query, params)
+    db.get_db().commit()
+    return jsonify({'message': 'Review added successfully'}), 200
+
+
+@company.route('/Company/int<CompanyID>', methods=['PUT'])
+def update_company_name(CompanyID):
+    data = request.json
+
+    query = '''
+        UPDATE Company
+        SET Name = %s
+        WHERE CompanyID = %s
+    '''
+    params = (data['Name'], CompanyID)
+
+    cursor = db.get_db().cursor()
+    cursor.execute(query, params)
+    db.get_db().commit()
+    return jsonify({'message': f'Company name for CompanyID {CompanyID} updated successfully.'}), 200
+
+
 # Get all reviews for a company
 @company.route('/CompanyReview/<CompanyID>', methods=['GET'])
 def get_company_reviews(CompanyID):

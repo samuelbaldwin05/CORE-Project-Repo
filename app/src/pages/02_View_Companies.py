@@ -6,99 +6,64 @@ import pandas as pd
 import pydeck as pdk
 from urllib.error import URLError
 from modules.nav import SideBarLinks
+import requests
 
+st.set_page_config(layout = 'wide', page_title = 'Company Search', page_icon = 'static/core-4.png')
 SideBarLinks()
 
-# add the logo
-#add_logo("assets/logo.png", height=400)
+st.title("Search By Company")
+# You can access the session state to make a more customized/personalized app experience
 
-# set up the page
-st.markdown("# Mapping Demo")
-st.sidebar.header("Mapping Demo")
-st.write(
-    """This Mapping Demo is from the Streamlit Documentation. It shows how to use
-[`st.pydeck_chart`](https://docs.streamlit.io/library/api-reference/charts/st.pydeck_chart)
-to display geospatial data."""
-)
+def fetch_data():
+    url = f'http://api:4000/p/positions/info'
+    response = requests.get(url)
+    response.raise_for_status()  
+    data = response.json()
+    return pd.DataFrame(data)
 
 
-@st.cache_data
-def from_data_file(filename):
-    url = (
-        "http://raw.githubusercontent.com/streamlit/"
-        "example-data/master/hello/v1/%s" % filename
-    )
-    return pd.read_json(url)
+df = fetch_data()
 
+position = st.selectbox("Select Position", df['PositionName'].unique())
+filtered_df = df[df['PositionName'] == position]
 
-try:
-    ALL_LAYERS = {
-        "Bike Rentals": pdk.Layer(
-            "HexagonLayer",
-            data=from_data_file("bike_rental_stats.json"),
-            get_position=["lon", "lat"],
-            radius=200,
-            elevation_scale=4,
-            elevation_range=[0, 1000],
-            extruded=True,
-        ),
-        "Bart Stop Exits": pdk.Layer(
-            "ScatterplotLayer",
-            data=from_data_file("bart_stop_stats.json"),
-            get_position=["lon", "lat"],
-            get_color=[200, 30, 0, 160],
-            get_radius="[exits]",
-            radius_scale=0.05,
-        ),
-        "Bart Stop Names": pdk.Layer(
-            "TextLayer",
-            data=from_data_file("bart_stop_stats.json"),
-            get_position=["lon", "lat"],
-            get_text="name",
-            get_color=[0, 0, 0, 200],
-            get_size=15,
-            get_alignment_baseline="'bottom'",
-        ),
-        "Outbound Flow": pdk.Layer(
-            "ArcLayer",
-            data=from_data_file("bart_path_stats.json"),
-            get_source_position=["lon", "lat"],
-            get_target_position=["lon2", "lat2"],
-            get_source_color=[200, 30, 0, 160],
-            get_target_color=[200, 30, 0, 160],
-            auto_highlight=True,
-            width_scale=0.0001,
-            get_width="outbound",
-            width_min_pixels=3,
-            width_max_pixels=30,
-        ),
-    }
-    st.sidebar.markdown("### Map Layers")
-    selected_layers = [
-        layer
-        for layer_name, layer in ALL_LAYERS.items()
-        if st.sidebar.checkbox(layer_name, True)
-    ]
-    if selected_layers:
-        st.pydeck_chart(
-            pdk.Deck(
-                map_style="mapbox://styles/mapbox/light-v9",
-                initial_view_state={
-                    "latitude": 37.76,
-                    "longitude": -122.4,
-                    "zoom": 11,
-                    "pitch": 50,
-                },
-                layers=selected_layers,
-            )
-        )
-    else:
-        st.error("Please choose at least one layer above.")
-except URLError as e:
-    st.error(
-        """
-        **This demo requires internet access.**
-        Connection error: %s
-    """
-        % e.reason
-    )
+if len(filtered_df) != 0:
+    # Create two columns
+    col1, col2 = st.columns(2)
+
+    # Display position info in the first column
+    with col1:   
+        # Get the first row of filtered data
+        pos_info = filtered_df.iloc[0]
+        
+        # Use if-else to check for 1/0 and display Yes/No
+        st.header(f"Position: {pos_info['PositionName']}")
+        st.write(f"**Description**: {pos_info['PositionDescription']}")
+
+        st.subheader("General Position Information")
+        st.write(f"**Yield Rate**: {(pos_info['YieldRate']) * 100}%")
+        #st.write(f"**Average Application Amount**: {pos_info['AvgAppAmount']}")
+        #st.write(f"**Average Interview Amount**: {pos_info['AvgInterview']}")
+        st.write(f"**Average Applicant GPA**: {pos_info['AvgGpa']}")
+        st.write(f"**Average Learning Rating**: {pos_info['AvgLearning']}")
+        st.write(f"**Average Environment Rating**: {pos_info['AvgEnvironment']}")
+        
+    # Display reviewer information in the second column
+    with col2:
+        st.header(f"Applicant Reviews")
+ 
+        for _, reviewer in filtered_df.iterrows():
+            st.subheader(f"Reviewer: {reviewer['Username']}")
+            st.write(f"**Offer**: {'Yes' if reviewer['Offer'] == 1 else 'No'}")
+            st.write(f"**Application Rating**: {reviewer['ApplicationRating']}")
+            st.write(f"**Environment Rating**: {reviewer['EnvironmentRating']}")
+            st.write(f"**Education Rating**: {reviewer['EducationRating']}")
+            st.write(f"**Enjoyment Rating**: {reviewer['EnjoymentRating']}")
+            st.write(f"**Position Applied**: {'Yes' if reviewer['Applied'] == 1 else 'No'}")
+            st.write(f"**Applied Date**: {reviewer['AppliedDate']}")
+            st.write(f"**Response Date**: {reviewer['ResponseDate']}")
+            st.write("----------")
+            st.write("")
+
+else:
+    st.write("No data available for the selected position.")

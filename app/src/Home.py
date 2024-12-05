@@ -15,7 +15,7 @@ from modules.nav import SideBarLinks
 
 # streamlit supports reguarl and wide layout (how the controls
 # are organized/displayed on the screen).
-st.set_page_config(layout = 'wide')
+st.set_page_config(layout = 'wide', page_title = 'CORE', page_icon = 'static/core-4.png')
 
 # If a user is at this page, we assume they are not 
 # authenticated.  So we change the 'authenticated' value
@@ -34,15 +34,15 @@ SideBarLinks(show_home=True)
 
 # set the title of the page and provide a simple prompt. 
 logger.info("Loading the Home page of the app")
-st.title('CS 3200 Sample Semester Project App')
+st.title('Co-op Rating and Evaluation')
 st.write('\n\n')
-st.write('### HI! As which user would you like to log in?')
+st.write('### Welcome! Which user would you like to log in as?')
 
 # For each of the user personas for which we are implementing
 # functionality, we put a button on the screen that the user 
 # can click to MIMIC logging in as that mock user. 
 
-if st.button("Act as Jenny, a Student Searching for a Coop",
+if st.button("Act as Jenny, a student searching for a co-op",
             type = 'primary', 
             use_container_width=True):
     # when user clicks the button, they are now considered authenticated
@@ -73,7 +73,7 @@ if st.button('Act as Cammy, a co-op advising faculty',
     st.session_state['first_name'] = 'Cammy'
     st.switch_page('pages/30_Faculty_Home.py')
 
-if st.button('Act as Michelle, a System Administrator',
+if st.button('Act as Michelle, a system administrator',
             type = 'primary', 
             use_container_width=True):
     st.session_state['authenticated'] = True

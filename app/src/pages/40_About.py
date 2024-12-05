@@ -2,6 +2,10 @@ import streamlit as st
 from streamlit_extras.app_logo import add_logo
 from modules.nav import SideBarLinks
 
+st.set_page_config(layout = 'wide', page_title = 'About', page_icon = 'static/core-4.png')
+
+# Be able to go back to home from about page, but dont show 
+# home when using about page from authenticated user
 if not st.session_state['authenticated']:
     SideBarLinks(show_home=True)
 else:

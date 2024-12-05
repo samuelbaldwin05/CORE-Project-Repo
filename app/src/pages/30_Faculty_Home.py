@@ -5,11 +5,11 @@ import streamlit as st
 from modules.nav import SideBarLinks
 import requests
 
-st.set_page_config(layout = 'wide')
+st.set_page_config(layout = 'wide', page_title = 'Faculty Home', page_icon = 'static/core-4.png')
 
 SideBarLinks()
 
-st.title(f'Welcome Faculty Advisor, {st.session_state['first_name']}.')
+st.title(f"Welcome Faculty Advisor, {st.session_state['first_name']}.")
 
 if st.button('View Student Data',
              type='primary',
