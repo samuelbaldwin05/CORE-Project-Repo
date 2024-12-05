@@ -13,10 +13,9 @@ menu = ['Applied To Work For', 'Worked For']
 choice = st.selectbox("Connection To Company", menu)
 
 if choice == 'Applied To Work For':
-    st.subheader("ComAppForm")
     with st.form(key='RejectForm'):
-        type = st.textinput("Extent of Relationship With Company")
-        review = st.textinput("Review Space")
+        type = st.text_input("Extent of Relationship With Company")
+        review = st.text_input("Review Space")
         submit_button = st.form_submit_button(label='Submit')
         # if submit_button:
         #     if not type or not review:
@@ -45,8 +44,8 @@ if choice == 'Applied To Work For':
 
 if choice == 'Worked For':
     with st.form(key='ComWorkForm'):
-        type = st.textinput("Extent of Relationship With Company")
-        review = st.textinput("Review Space")
+        type = st.text_input("Extent of Relationship With Company")
+        review = st.text_input("Review Space")
         envrating = st.number_input("Environment Rating (1-5)", 1, 5)
         culturerating = st.number_input("Culture Rating (1-5)", 1, 5)
         submit_button = st.form_submit_button(label='Submit')
