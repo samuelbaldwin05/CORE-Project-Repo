@@ -15,76 +15,6 @@ from backend.db_connection import db
 position = Blueprint('position', __name__)
 
 
-# Get positions ordered by yield rate
-@position.route('/Position/PosStats/YieldRate', methods=['GET'])
-def get_positions_by_yield_rate():
-    query = '''
-        SELECT pt.*, pst.YieldRate 
-        FROM PositionTable pt 
-        JOIN PosStats pst 
-        ON pt.PositionID = pst.PositionID 
-        ORDER BY pst.YieldRate
-    '''
-    cursor = db.get_db().cursor()
-    cursor.execute(query)
-    data = cursor.fetchall()
-    return jsonify(data), 200
-
-
-# ------------------------------------------------------------
-# Get positions ordered by average learning percentage
-@position.route('/Position/PosStats/Learning', methods=['GET'])
-def get_positions_by_learning():
-    query = '''
-        SELECT pt.*, pst.AvgLearning 
-        FROM positiontable pt 
-        JOIN positionstatstable pst 
-        ON pt.position_id = pst.position_id 
-        ORDER BY pst.AvgLearning
-    '''
-    cursor = db.get_db().cursor()
-    cursor.execute(query)
-    data = cursor.fetchall()
-    return jsonify(data), 200
-
-
-# ------------------------------------------------------------
-# Get positions filtered by GPA
-@position.route('/Position/PosStats/<int:gpa>', methods=['GET'])
-def get_positions_by_gpa(gpa):
-    query = '''
-        SELECT pt.*, pst.AvgGpa
-        FROM positiontable pt 
-        JOIN positionstatstable pst 
-        ON pt.position_id = pst.position_id 
-        WHERE pst.AvgGpa = %s
-        ORDER BY pst.AvgGpa
-    '''
-    cursor = db.get_db().cursor()
-    cursor.execute(query, (gpa,))
-    data = cursor.fetchall()
-    return jsonify(data), 200
-
-
-# ------------------------------------------------------------
-# Add a new position to the PositionTable
-@position.route('/position', methods=['POST'])
-def add_new_position():
-    data = request.json
-    current_app.logger.info(data)
-
-    query = '''
-        INSERT INTO PositionTable (PositionName, Description, Skills, Environment, AdditionalQuestions, CoverLetter)
-        VALUES (%s, %s, %s, %s, %s, %s)
-    '''
-    params = (data['PositionName'], data['Description'], data['Skills'], data['Environment'], data['AdditionalQuestions'], data['CoverLetter'])
-    cursor = db.get_db().cursor()
-    cursor.execute(query, params)
-    db.get_db().commit()
-    return jsonify({'message': 'Position added successfully'}), 200
-
-
-# ------------------------------------------------------------
 # Update position stats for a specific PositionID
 @position.route('/posstats/<int:PositionID>', methods=['PUT'])
 def update_posstats(PositionID):
@@ -112,17 +42,8 @@ def update_posstats(PositionID):
 
 
 
-# ------------------------------------------------------------
-# Remove a position from the PositionTable
-@position.route('/position/Remove/<int:PositionID>', methods=['DELETE'])
-def remove_position(PositionID):
-    query = 'DELETE FROM PositionTable WHERE PositionID = %s'
-    cursor = db.get_db().cursor()
-    cursor.execute(query, (PositionID,))
-    db.get_db().commit()
-    return jsonify({'message': f'Position with ID {PositionID} deleted successfully.'}), 200
-
-
+\
+# Gets position review informaiton along with reviewers
 @position.route('/PositionReview', methods=['GET'])
 def get_posreviews():
     query = '''
@@ -135,6 +56,9 @@ def get_posreviews():
     cursor.execute(query)
     reviews = cursor.fetchall()
     return jsonify(reviews), 200
+
+
+
 
 # BREAK INTO MULTIPLE ROUTES - first route gets PositionID from PositionName, 
 # second connects PositionID to PositionStats
@@ -165,22 +89,10 @@ def get_posinfo():
     reviews = cursor.fetchall()
     return jsonify(reviews), 200
 
-@position.route('/PositionReview/<int:PositionID>', methods=['GET'])
-def get_reviews_by_position(PositionID=None):
-    query = '''
-            SELECT *
-            FROM PositionReview
-            WHERE PositionID = %s
-        '''
-    params = (PositionID,)
 
 
-    cursor = db.get_db().cursor()
-    cursor.execute(query, params)
-    reviews = cursor.fetchall()
-    return jsonify(reviews), 200
 
-# creating a new route for a specific position
+# Creating new position review
 @position.route('/PositionReview/post', methods=['POST'])
 def add_review():
     data = request.json  # Expecting JSON input
@@ -204,7 +116,10 @@ def add_review():
     return jsonify({'message': 'Review added successfully'}), 200
 
 
-# deleting reviews
+
+
+
+# Deleting reviews
 @position.route('/PositionReview/<int:PosReviewID>', methods=['DELETE'])
 def delete_review(PosReviewID):
     query = '''
@@ -217,7 +132,10 @@ def delete_review(PosReviewID):
     return jsonify({'message': f'Review with ID {PosReviewID} deleted successfully'}), 200
 
 
-# position based on major
+
+
+
+# Getting position by major
 @position.route('/positions/related_majors/<int:major_id>', methods=['GET'])
 def get_positions_by_related_majors(major_id):
     query = '''

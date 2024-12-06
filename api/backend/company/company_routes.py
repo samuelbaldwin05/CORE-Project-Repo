@@ -16,39 +16,7 @@ company = Blueprint('company', __name__)
 
 #------------------------------------------------------------
 
-# Get companies ordered by average culture rating
-@company.route('/Company/CultureRating', methods=['GET'])
-def get_companies_by_culture_rating():
-    query = '''
-        SELECT c.company_id, c.company_name, AVG(cr.culture_rating) AS avg_culture_rating
-        FROM company c
-        JOIN company_review cr ON c.company_id = cr.company_id
-        GROUP BY c.company_id, c.company_name
-        ORDER BY avg_culture_rating DESC
-    '''
-    cursor = db.get_db().cursor()
-    cursor.execute(query)
-    theData = cursor.fetchall()
-    response = make_response(jsonify(theData))
-    response.status_code = 200
-    
-    return response
-
-# Get companies by industry
-@company.route('/Company/<Industry>', methods=['GET'])
-def get_companies_by_industry(Industry):
-    query = f'''
-        SELECT * FROM company
-        WHERE industry = '{Industry}'
-    '''
-    cursor = db.get_db().cursor()
-    cursor.execute(query)
-    theData = cursor.fetchall()
-    response = make_response(jsonify(theData))
-    response.status_code = 200
-
-    return response
-
+# Get all info for a company
 @company.route('/Company/info', methods=['GET'])
 def get_company_info():
     query = f'''
@@ -67,23 +35,6 @@ def get_company_info():
     response = make_response(jsonify(theData))
     response.status_code = 200
 
-    return response
-# Get companies by city
-@company.route('/Company/Location/<City>', methods=['GET'])
-def get_companies_by_city(City):
-    query = f'''
-        SELECT c.*
-        FROM company c
-        JOIN location l ON c.locationid = l.locationid
-        WHERE l.city = '{City}'
-    '''
-    
-    cursor = db.get_db().cursor()
-    cursor.execute(query)
-    theData = cursor.fetchall()
-    response = make_response(jsonify(theData))
-    response.status_code = 200
-    
     return response
 
 
@@ -228,6 +179,7 @@ def delete_company_review(ComReviewID):
     db.get_db().commit()
     return jsonify({'message': f'Position with ID {ComReviewID} deleted successfully.'}), 200
 
+# Get all stats of a company
 @company.route('/Company/stats', methods=['GET'])
 def get_average_company_stats():
     """
