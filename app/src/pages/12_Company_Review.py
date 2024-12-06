@@ -23,7 +23,7 @@ def fetch_data():
 
 # Getting CompanyID
 df = fetch_data()
-position = st.selectbox("Select Position", df['Name'].unique())
+position = st.selectbox("Select Company", df['Name'].unique())
 index = df.index[df['Name'] == position].tolist()
 if index:
     comID = int(df.loc[index[0], 'CompanyID'])
@@ -55,17 +55,13 @@ if choice == 'Applied To Work For':
                     "EnvironmentRating": None,
                     "CultureRating": None
                 }
-                logger.info(f"Product form submitted with data: {comreview_data}")
+                logger.info(f"Review form submitted with data: {comreview_data}")
                 try:
-                    # using the requests library to POST to /p/product.  Passing
-                    # product_data to the endpoint through the json parameter.
-                    # This particular end point is located in the products_routes.py
-                    # file found in api/backend/products folder. 
                     response = requests.post('http://api:4000/c/CompanyReview', json=comreview_data)
                     if response.status_code == 200:
-                        st.success("Product added successfully!")
+                        st.success("Review added successfully!")
                     else:
-                        st.error(f"Error adding product: {response.text}")
+                        st.error(f"Error adding review: {response.text}")
                 except requests.exceptions.RequestException as e:
                     st.error(f"Error connecting to server: {str(e)}")
 
@@ -90,12 +86,8 @@ if choice == 'Worked For':
                     "EnvironmentRating": env_rating,
                     "CultureRating": culture_rating
                 }
-                logger.info(f"Product form submitted with data: {comreview_data}")
+                logger.info(f"Review form submitted with data: {comreview_data}")
                 try:
-                    # using the requests library to POST to /p/product.  Passing
-                    # product_data to the endpoint through the json parameter.
-                    # This particular end point is located in the products_routes.py
-                    # file found in api/backend/products folder. 
                     response = requests.post('http://api:4000/c/CompanyReview', json=comreview_data)
                     if response.status_code == 200:
                         st.success("Product added successfully!")
