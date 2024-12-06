@@ -26,26 +26,40 @@ def fetch_positions():
     data = response.json()
     return pd.DataFrame(data)
 
+col1, col2= st.columns(2)
+# Route to fetch data
 def fetch_data():
     url = f'http://api:4000/j/JobPosting'
     response = requests.get(url)
     response.raise_for_status()  
     data = response.json()
     return pd.DataFrame(data)
+# Fetch Data
 company_data = fetch_data()
-col1, col2 = st.columns(2)
-col3, col4 = st.columns(2)
+
 with col1:
-    st.subheader("Update Job Posting")
-    status = st.text_input("Update Status")
+    st.subheader("Change Posting Status")
+    selected_pos_name= st.selectbox("Choose a Posting", company_data["PositionName"])
+
+    selected_posting = company_data[company_data["PositionName"] == selected_pos_name]
+
+    #st.dataframe(selected_posting)
+    status_value = selected_posting.iloc[0]["Status"]
+    if status_value == 1:
+        st.write("Current Status: Posted")
+    else:
+        st.write("Current Status: Unposted")
+    checkbox_status = st.checkbox("Position Posted", value=(status_value == 1))
+
+    if checkbox_status:
+        status = 1
+    else:
+        status = 0
 
 
 
-with col2:
-    st.subheader("Select Existing Posting")
-    selected_posting= st.selectbox("Choose a PostingID", company_data["PostingID"])
     posting_update = {"Status": status}
-    logger.info(f"Posting form form submitted with data: {selected_posting}")
+    logger.info(f"Posting form submitted with data: {selected_posting}")
     if st.button("Submit"):
         try:
             # using the requests library to POST to /p/product.  Passing
@@ -53,24 +67,30 @@ with col2:
                         # This particular end point is located in the products_routes.py
                         # file found in api/backend/products folder. 
             response = requests.put(f'http://api:4000/j/JobPosting/{selected_posting}', json=posting_update)
-            if response.status_code == 200:
-                st.write(f"Updated, go to Jobpostingview to see")
+            if response.status_code == 204:
+                    st.success("Posting Updated!")
+            else:
+                st.write("Error1")
         except:
-            print("not cool")
+            st.write("Error")
 
-with col3:
+with col2:
+    st.subheader("Create New Posting")
     df = fetch_positions()
     df2 = fetch_company()
-    Status = st.text_input("input status")
     PositionName = st.selectbox("Choose a PositionID", df["PositionName"].unique())
     CompanyName = st.selectbox("Choose a companyID", df2["CompanyName"])
     PositionID = df.loc[df['PositionName'] == PositionName, 'PositionID'].iloc[0]
     CompanyID = df2.loc[df2['CompanyName'] == CompanyName, 'CompanyID'].iloc[0]
-    DatePosted = st.date_input("Select a date", value=datetime.now().date())
+    DatePosted = st.date_input("Select Posting Date", value=datetime.now().date())
+    checkbox_status2 = st.checkbox("Posting Status")
+    if checkbox_status2:
+        Status = 1
+    else:
+        Status = 0
     posting_json= {"DatePosted": str(DatePosted), "Status":bool(Status), "PositionID":int(PositionID), "CompanyID": int(CompanyID)}
-    if st.button("Submit new Posting"):
+    if st.button("Submit New Posting"):
         response = requests.post('http://api:4000/j/JobPosting', json=posting_json)
-        st.write(response.text)
-        if response.status_code == 200:
-         st.write(f"War is over, go to Jobpostingview to see")
-   
+        if response.status_code == 204:
+                    st.success("Posting Created!")
+    

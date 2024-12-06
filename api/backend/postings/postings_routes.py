@@ -1,6 +1,7 @@
 from flask import Blueprint, request, jsonify, make_response, current_app
 from backend.db_connection import db
 from datetime import timedelta
+from flask import Response
 
 # Create a Blueprint object for job postings
 job_posting = Blueprint('job_posting', __name__)
@@ -12,7 +13,10 @@ job_posting = Blueprint('job_posting', __name__)
 # Get all job postings
 @job_posting.route('/JobPosting', methods=['GET'])
 def get_all_job_postings():
-    query = 'SELECT * FROM JobPosting'
+    query = '''SELECT jp.*, pt.PositionName 
+        FROM JobPosting jp
+        JOIN PositionTable pt ON jp.PositionID = pt.PositionID
+        '''
     cursor = db.get_db().cursor()
     cursor.execute(query)
     data = cursor.fetchall()
@@ -53,7 +57,7 @@ def add_new_job_posting():
     cursor = db.get_db().cursor()
     cursor.execute(query, params)
     db.get_db().commit()
-    return jsonify({'message': 'Job posting added successfully'}), 201
+    return Response(status=204)
 
 # Update a job posting
 @job_posting.route('/JobPosting/<int:PostingID>', methods=['PUT'])
@@ -68,7 +72,7 @@ def update_job_posting(PostingID):
     cursor = db.get_db().cursor()
     cursor.execute(query, params)
     db.get_db().commit()
-    return jsonify({'message': f'Job posting with ID {PostingID} updated successfully'}), 200
+    return Response(status=204)
 
 # Delete a job posting
 @job_posting.route('/JobPosting/<int:PostingID>', methods=['DELETE'])

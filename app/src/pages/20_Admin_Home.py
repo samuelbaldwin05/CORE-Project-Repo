@@ -17,7 +17,7 @@ if st.button('Delete Incorrect Data',
              use_container_width=True):
   st.switch_page('pages/21_Delete_Data.py')
 
-if st.button('Manage Coop Reviews',
+if st.button('Change Company Info',
              type='primary',
              use_container_width=True):
   st.switch_page('pages/22_Change_Company_Info.py')

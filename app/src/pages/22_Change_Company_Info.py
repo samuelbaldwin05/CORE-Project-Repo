@@ -10,7 +10,7 @@ st.set_page_config(layout='wide', page_title='Company Review', page_icon='static
 SideBarLinks()
 
 # Creating title and getting relationship of user to the company
-st.title("Company Management")
+st.title("Change Company Info")
 
 # Function to get company stats
 def fetch_data():
@@ -23,35 +23,25 @@ def fetch_data():
 # Call fetch function to get company stats
 company_data = fetch_data()
 
-# Create two columns
-col1, col2 = st.columns(2)
+# Choose Existing Company to Change Name
+st.subheader("Select Existing Company")
+selected_company = st.selectbox("Choose Company", company_data["CompanyName"].unique())
 
-# Column one has company name input
-with col1:
-    st.subheader("Change Company Name")
-    new_company_name = st.text_input("Input new company name")
+# Input New Company
+st.subheader("Change Company Name")
+new_company_name = st.text_input("Input New Company Name")
 
-# Column two choose existing company to change, button to submit change
-# Put route to make change happen
-with col2:
-    st.subheader("Select Existing Company")
-    selected_company = st.selectbox("Choose a company", company_data["CompanyName"].unique())
-    st.write(f"Selected company: {selected_company}")
-    company_update = {"Name": new_company_name}
-    logger.info(f"Product form submitted with data: {company_update}")
-    company_id = company_data.loc[company_data['CompanyName'] == selected_company, 'CompanyID'].iloc[0]
-    st.write(company_id)
-    if st.button("Submit"):
-        try:
-            # using the requests library to POST to /p/product.  Passing
-            # product_data to the endpoint through the json parameter.
-                        # This particular end point is located in the products_routes.py
-                        # file found in api/backend/products folder. 
-            response = requests.put(f'http://api:4000/c/Company/{company_id}', json=company_update)
-            if response.status_code == 200:
-                st.write(f"Updated, Refresh page to view")
-        except:
-            print("Error")
+company_update = {"Name": new_company_name}
+logger.info(f"Product form submitted with data: {company_update}")
+company_id = company_data.loc[company_data['CompanyName'] == selected_company, 'CompanyID'].iloc[0]
+if st.button("Submit"):
+    try:
+        # Put request to update company name from id
+        response = requests.put(f'http://api:4000/c/Company/{company_id}', json=company_update)
+        if response.status_code == 200:
+            st.write(f"Properly Updated Company Name")
+    except:
+        print("Error")
 
         
    

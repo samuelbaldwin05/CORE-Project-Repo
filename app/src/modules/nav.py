@@ -82,7 +82,7 @@ def AdminPageNav():
         "pages/21_Delete_Data.py", label="Delete Incorrect Data", icon="🗑️"
     )
     st.sidebar.page_link(
-        "pages/22_Change_Company_Info.py", label="Company Review Management", icon="🏢"
+        "pages/22_Change_Company_Info.py", label="Change Company Info", icon="🏢"
     )
     st.sidebar.page_link(
         "pages/23_Job_Posting_Mgmt.py", label="Job Posting Management", icon="🗂️"

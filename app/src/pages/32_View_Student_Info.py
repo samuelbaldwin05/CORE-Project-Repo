@@ -26,18 +26,15 @@ df = df[df["c.CollegeID"] == df["CollegeID"]]
 df['AdvisorName'] = df['FirstName'] + " " + df['LastName']
 col_order = ["Username", "NUID", "CollegeName", "MajorName", "GPA", "AppCount", "OfferCount", "AdvisorName"]
 df = df[col_order]
-# Rename the columns
-# rename_columns = {
-#         "Name": "Company",
-#         "PositionName": "Position",
-#         "DatePosted": "Date Posted",
-#         "YieldRate": "Yield (%)",
-#         "AvgAppAmount": "# Apps",
-#         "AvgGpa": "GPA",
-#         "AvgLearning": "Learning",
-#         "AvgEnvironment": "Environment"
-#     }
-# df.rename(columns=rename_columns, inplace=True)
+#Rename the columns
+rename_columns = {
+        "CollegeName": "College",
+        "MajorName": "Major",
+        "AppCount": "# Apps",
+        "OfferCount": "# Offers",
+        "AdvisorName": "Advisor"
+    }
+df.rename(columns=rename_columns, inplace=True)
 use_advisor = st.checkbox("View Only Your Students")
 if use_advisor:
     df = df[df["AdvisorName"] == "Cammy Giles"]
