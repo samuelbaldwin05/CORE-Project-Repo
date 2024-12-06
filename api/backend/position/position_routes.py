@@ -15,7 +15,6 @@ from backend.db_connection import db
 position = Blueprint('position', __name__)
 
 
-# ------------------------------------------------------------
 # Update position stats for a specific PositionID
 @position.route('/posstats/<int:PositionID>', methods=['PUT'])
 def update_posstats(PositionID):
@@ -42,6 +41,9 @@ def update_posstats(PositionID):
     return jsonify({'message': f'Position stats for PositionID {PositionID} updated successfully.'}), 200
 
 
+
+\
+# Gets position review informaiton along with reviewers
 @position.route('/PositionReview', methods=['GET'])
 def get_posreviews():
     query = '''
@@ -54,6 +56,9 @@ def get_posreviews():
     cursor.execute(query)
     reviews = cursor.fetchall()
     return jsonify(reviews), 200
+
+
+
 
 # BREAK INTO MULTIPLE ROUTES - first route gets PositionID from PositionName, 
 # second connects PositionID to PositionStats
@@ -84,7 +89,10 @@ def get_posinfo():
     reviews = cursor.fetchall()
     return jsonify(reviews), 200
 
-# creating a new route for a specific position
+
+
+
+# Creating new position review
 @position.route('/PositionReview/post', methods=['POST'])
 def add_review():
     data = request.json  # Expecting JSON input
@@ -108,7 +116,10 @@ def add_review():
     return jsonify({'message': 'Review added successfully'}), 200
 
 
-# deleting reviews
+
+
+
+# Deleting reviews
 @position.route('/PositionReview/<int:PosReviewID>', methods=['DELETE'])
 def delete_review(PosReviewID):
     query = '''
@@ -121,7 +132,10 @@ def delete_review(PosReviewID):
     return jsonify({'message': f'Review with ID {PosReviewID} deleted successfully'}), 200
 
 
-# position based on major
+
+
+
+# Getting position by major
 @position.route('/positions/related_majors/<int:major_id>', methods=['GET'])
 def get_positions_by_related_majors(major_id):
     query = '''
