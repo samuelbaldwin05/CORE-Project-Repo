@@ -48,12 +48,14 @@ with col1:
         st.write("Current Status: Posted")
     else:
         st.write("Current Status: Unposted")
-    checkbox_status = st.checkbox("Position Posted", value=(status_value == 1))
+    checkbox_status = st.checkbox("Status", value=(status_value == 1))
 
     if checkbox_status:
         status = "TRUE"
+        st.write("New Status: Posted")
     else:
         status = "FALSE"
+        st.write("New Status: Unposted")
 
 
 
