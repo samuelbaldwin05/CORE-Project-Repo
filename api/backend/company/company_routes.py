@@ -16,6 +16,7 @@ company = Blueprint('company', __name__)
 
 #------------------------------------------------------------
 
+# Get all info for a company
 @company.route('/Company/info', methods=['GET'])
 def get_company_info():
     query = f'''
@@ -178,6 +179,7 @@ def delete_company_review(ComReviewID):
     db.get_db().commit()
     return jsonify({'message': f'Position with ID {ComReviewID} deleted successfully.'}), 200
 
+# Get all stats of a company
 @company.route('/Company/stats', methods=['GET'])
 def get_average_company_stats():
     """
