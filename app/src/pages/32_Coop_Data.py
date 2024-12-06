@@ -32,12 +32,12 @@ else:
     posID = None
     st.error("No PositionID found for the selected position.")
 
-def fetch_poststats_data():
+def fetch_poststats_data(posID):
     url = f'http://api:4000/j/JobPosting/id/{posID}'
     response = requests.get(url)
     response.raise_for_status()  
     data = response.json()
     return pd.DataFrame(data)
 
-df = fetch_poststats_data()
+df = fetch_poststats_data(posID)
 st.dataframe(df)

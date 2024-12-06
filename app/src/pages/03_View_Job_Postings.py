@@ -39,4 +39,19 @@ rename_columns = {
     }
 df.rename(columns=rename_columns, inplace=True)
 df['Yield (%)'] = (df['Yield (%)'] * 100)
-st.dataframe(df, use_container_width=True, hide_index=True)
+
+col1, col2 = st.columns(2)
+with col1: 
+    company = st.selectbox("Search By Company", ["None"] + list(df['Company'].unique()))
+with col2:
+    position = st.selectbox("Search By Position", ["None"] + list(df['Position'].unique()))
+
+filtered_df = df.copy() 
+if company != "None":
+    filtered_df = filtered_df[filtered_df['Company'] == company]
+
+if position != "None":
+    filtered_df = filtered_df[filtered_df['Position'] == position]
+
+# Display the filtered DataFrame
+st.dataframe(filtered_df, use_container_width=True, hide_index=True)

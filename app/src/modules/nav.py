@@ -128,8 +128,8 @@ def SideBarLinks(show_home=False):
         if st.session_state["role"] == "faculty":
             FacultyHomeNav()
             StudentDataNav()
-            CoopDataNav()
             AlterStudentDataNav()
+            ViewPostingsNav()
 
         # If the user is an administrator, give them access to the administrator pages
         if st.session_state["role"] == "administrator":
