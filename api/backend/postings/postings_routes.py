@@ -146,3 +146,19 @@ def delete_post_stats(PostStatID):
     cursor.execute(query, (PostStatID,))
     db.get_db().commit()
     return jsonify({'message': f'Post stats with ID {PostStatID} deleted successfully'}), 200
+
+
+@job_posting.route('/JobPosting/id/<int:PositionID>', methods=['GET'])
+def get_job_postingids_by_position(PositionID):
+    query = '''
+        SELECT DISTINCT pt.PositionName, ps.AppAmount, ps.InterviewAmount, ps.OfferAmnt, 
+                        ps.AcceptAmnt, ps.CallBackNum, ps.MeanResponseTime
+        FROM JobPosting j
+        JOIN PostStats ps ON j.PostingID = ps.PostingID
+        JOIN PositionTable pt ON j.PositionID = pt.PositionID
+        WHERE pt.PositionID = %s
+    '''
+    cursor = db.get_db().cursor()
+    cursor.execute(query, (PositionID,))
+    db.get_db().commit()
+    return jsonify({'message': f'Pos stats with ID {PositionID} gotten successfully'}), 200
