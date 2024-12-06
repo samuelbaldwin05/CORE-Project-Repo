@@ -22,7 +22,7 @@ company_data = fetch_data()
 col1, col2 = st.columns(2)
 
 with col1:
-    st.subheader("Add New Company")
+    st.subheader("Change Company Name")
     new_company_name = st.text_input("Input new company name")
 
 

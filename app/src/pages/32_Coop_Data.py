@@ -11,3 +11,10 @@ st.set_page_config(layout = 'wide', page_title = 'Co-op Data', page_icon = 'stat
 SideBarLinks()
 
 st.title('View Co-op Data')
+
+def fetch_data():
+    url = f'http://api:4000/c/Company'
+    response = requests.get(url)
+    response.raise_for_status()  
+    data = response.json()
+    return pd.DataFrame(data)
