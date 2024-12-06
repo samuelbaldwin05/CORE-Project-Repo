@@ -10,7 +10,7 @@ job_posting = Blueprint('job_posting', __name__)
 # Routes for JobPosting
 ########################################################
 
-# Get all job postings
+# Get all job postings 
 @job_posting.route('/JobPosting', methods=['GET'])
 def get_all_job_postings():
     query = '''SELECT jp.*, pt.PositionName 
@@ -22,6 +22,7 @@ def get_all_job_postings():
     data = cursor.fetchall()
     return jsonify(data), 200
 
+# Get all job posting info including PostionName and PostStats
 @job_posting.route('/Info', methods=['GET'])
 def get_all_job_posting_info():
     query = '''SELECT c.Name, pt.PositionName, jp.*, ps.AvgGpa, ps.YieldRate, ps.AvgAppAmount, ps.AvgLearning, ps.AvgEnvironment
@@ -35,15 +36,6 @@ def get_all_job_posting_info():
     data = cursor.fetchall()
     return jsonify(data), 200
 
-
-# Get job postings by PositionID
-@job_posting.route('/JobPosting/<int:PositionID>', methods=['GET'])
-def get_job_postings_by_position(PositionID):
-    query = 'SELECT * FROM JobPosting WHERE PositionID = %s'
-    cursor = db.get_db().cursor()
-    cursor.execute(query, (PositionID,))
-    data = cursor.fetchall()
-    return jsonify(data), 200
 
 # Add a new job posting
 @job_posting.route('/JobPosting', methods=['POST'])
@@ -147,19 +139,3 @@ def delete_post_stats(PostStatID):
     cursor.execute(query, (PostStatID,))
     db.get_db().commit()
     return jsonify({'message': f'Post stats with ID {PostStatID} deleted successfully'}), 200
-
-
-@job_posting.route('/JobPosting/id/<int:PositionID>', methods=['GET'])
-def get_job_postingids_by_position(PositionID):
-    query = '''
-        SELECT DISTINCT pt.PositionName, ps.AppAmount, ps.InterviewAmount, ps.OfferAmnt, 
-                        ps.AcceptAmnt, ps.CallBackNum, ps.MeanResponseTime
-        FROM JobPosting j
-        JOIN PostStats ps ON j.PostingID = ps.PostingID
-        JOIN PositionTable pt ON j.PositionID = pt.PositionID
-        WHERE pt.PositionID = %s
-    '''
-    cursor = db.get_db().cursor()
-    cursor.execute(query, (PositionID,))
-    db.get_db().commit()
-    return jsonify({'message': f'Pos stats with ID {PositionID} gotten successfully'}), 200
