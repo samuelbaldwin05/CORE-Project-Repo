@@ -16,12 +16,12 @@ if st.button('View Student Data',
              use_container_width=True):
   st.switch_page('pages/31_Student_Data.py')
 
-if st.button('View Coop Data',
-             type='primary',
-             use_container_width=True):
-  st.switch_page('pages/32_Coop_Data.py')
-
 if st.button('Alter Student Data',
              type='primary',
              use_container_width=True):
   st.switch_page('pages/33_Alter_Students.py')
+
+if st.button('View Current Positions',
+             type='primary',
+             use_container_width=True):
+  st.switch_page('pages/03_View_Job_Postings.py')
