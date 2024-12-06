@@ -37,7 +37,7 @@ rename_columns = {
 df.rename(columns=rename_columns, inplace=True)
 use_advisor = st.checkbox("View Only Your Students")
 if use_advisor:
-    df = df[df["AdvisorName"] == "Cammy Giles"]
+    df = df[df["Advisor"] == "Cammy Giles"]
     st.dataframe(df, use_container_width=True, hide_index=True)
 else:
     st.dataframe(df, use_container_width=True, hide_index=True)
