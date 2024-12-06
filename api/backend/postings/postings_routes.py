@@ -65,7 +65,7 @@ def update_job_posting(PostingID):
     data = request.json
     query = '''
         UPDATE JobPosting
-        SET Status = %s,
+        SET Status = %s
         WHERE PostingID = %s
     '''
     params = (data['Status'], PostingID)

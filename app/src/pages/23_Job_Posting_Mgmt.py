@@ -35,16 +35,15 @@ def fetch_data():
     data = response.json()
     return pd.DataFrame(data)
 # Fetch Data
-company_data = fetch_data()
 
 with col1:
+    df = fetch_data()
     st.subheader("Change Posting Status")
-    selected_pos_name= st.selectbox("Choose a Posting", company_data["PositionName"])
+    selected_pos_name= st.selectbox("Choose a Posting", df["PositionName"].unique())
 
-    selected_posting = company_data[company_data["PositionName"] == selected_pos_name]
-
+    PositionID = df.loc[df['PositionName'] == selected_pos_name, 'PositionID'].iloc[0]
+    status_value = df.loc[df['PositionName'] == selected_pos_name, 'Status'].iloc[0]
     #st.dataframe(selected_posting)
-    status_value = selected_posting.iloc[0]["Status"]
     if status_value == 1:
         st.write("Current Status: Posted")
     else:
@@ -52,25 +51,25 @@ with col1:
     checkbox_status = st.checkbox("Position Posted", value=(status_value == 1))
 
     if checkbox_status:
-        status = 1
+        status = "TRUE"
     else:
-        status = 0
+        status = "FALSE"
 
 
 
-    posting_update = {"Status": status}
-    logger.info(f"Posting form submitted with data: {selected_posting}")
+    posting_update = {"Status":bool(status)}
+    logger.info(f"Posting form submitted with data: {PositionID}")
     if st.button("Submit"):
         try:
             # using the requests library to POST to /p/product.  Passing
             # product_data to the endpoint through the json parameter.
                         # This particular end point is located in the products_routes.py
                         # file found in api/backend/products folder. 
-            response = requests.put(f'http://api:4000/j/JobPosting/{selected_posting}', json=posting_update)
+            response = requests.put(f'http://api:4000/j/JobPosting/{PositionID}', json=posting_update)
             if response.status_code == 204:
-                    st.success("Posting Updated!")
+                st.success("Posting Updated!")
             else:
-                st.write("Error1")
+                st.write(response.text)
         except:
             st.write("Error")
 
