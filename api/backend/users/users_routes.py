@@ -248,7 +248,7 @@ def get_user_reviews(nuid):
 
 # ------------------------------------------------------------
 
-# PUT Route for Cammy, allows advisor to update Users GPA
+# POST Route for Cammy, allows advisor to update Users GPA
 
 @users.route('/user/add', methods=['POST'])
 def add_new_position():
