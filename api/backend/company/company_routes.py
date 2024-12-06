@@ -16,21 +16,6 @@ company = Blueprint('company', __name__)
 
 #------------------------------------------------------------
 
-# Get companies by industry
-@company.route('/Company/<Industry>', methods=['GET'])
-def get_companies_by_industry(Industry):
-    query = f'''
-        SELECT * FROM company
-        WHERE industry = '{Industry}'
-    '''
-    cursor = db.get_db().cursor()
-    cursor.execute(query)
-    theData = cursor.fetchall()
-    response = make_response(jsonify(theData))
-    response.status_code = 200
-
-    return response
-
 @company.route('/Company/info', methods=['GET'])
 def get_company_info():
     query = f'''
