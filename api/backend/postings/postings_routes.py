@@ -61,13 +61,10 @@ def update_job_posting(PostingID):
     data = request.json
     query = '''
         UPDATE JobPosting
-        SET CompanyID = %s,
-            DatePosted = %s,
-            Status = %s,
-            PositionID = %s
+        SET Status = %s,
         WHERE PostingID = %s
     '''
-    params = (data['CompanyID'], data['DatePosted'], data['Status'], data['PositionID'], PostingID)
+    params = (data['Status'], PostingID)
     cursor = db.get_db().cursor()
     cursor.execute(query, params)
     db.get_db().commit()
