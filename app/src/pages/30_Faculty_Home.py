@@ -11,6 +11,7 @@ SideBarLinks()
 
 st.title(f"Welcome Faculty Advisor, {st.session_state['first_name']}.")
 
+# Buttons link to other pages
 if st.button('View Student Data',
              type='primary',
              use_container_width=True):
@@ -25,3 +26,8 @@ if st.button('View Current Positions',
              type='primary',
              use_container_width=True):
   st.switch_page('pages/03_View_Job_Postings.py')
+
+if st.button('View Student Information',
+             type='primary',
+             use_container_width=True):
+  st.switch_page('pages/32_Coop_Data.py')

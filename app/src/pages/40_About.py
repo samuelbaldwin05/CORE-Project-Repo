@@ -11,6 +11,7 @@ if not st.session_state['authenticated']:
 else:
     SideBarLinks()
 
+# About description
 st.write("# About this App")
 
 st.markdown (

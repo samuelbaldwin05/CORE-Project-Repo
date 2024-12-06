@@ -14,6 +14,7 @@ st.write('')
 st.write('')
 st.write('### What would you like to do today?')
 
+# Buttons link to other pages
 if st.button('Search By Position',
              type='primary',
              use_container_width=True):

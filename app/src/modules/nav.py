@@ -63,9 +63,9 @@ def StudentDataNav():
         "pages/31_Student_Data.py", label="View Student Data", icon="👨‍🎓"
     )
 
-def CoopDataNav():
+def StudentInfoNav():
     st.sidebar.page_link(
-        "pages/32_Coop_Data.py", label="View Coop Data", icon="📊"
+        "pages/32_Coop_Data.py", label="View Student Info", icon="📊"
     )
 
 def AlterStudentDataNav():
@@ -110,14 +110,14 @@ def SideBarLinks(show_home=False):
     # Show the other page navigators depending on the users' role.
     if st.session_state["authenticated"]:
 
-        # Show World Bank Link and Map Demo Link if the user is a political strategy advisor role.
+        # Sidebar links for coop searcher role
         if st.session_state["role"] == "coop_searcher":
             PolStratAdvHomeNav()
             ViewCoopsNav()
             ViewCompaniesNav()
             ViewPostingsNav()
 
-        # If the user role is reviewer, show the Api Testing page
+        # Sidebars for reviewer role
         if st.session_state["role"] == "reviewer":
             ReviewerHomeNav()
             CoopReviewNav()
@@ -125,11 +125,13 @@ def SideBarLinks(show_home=False):
             ViewCoopsNav()
             ViewCompaniesNav()
 
+        # Sidebar links for faculty role
         if st.session_state["role"] == "faculty":
             FacultyHomeNav()
             StudentDataNav()
             AlterStudentDataNav()
             ViewPostingsNav()
+            StudentInfoNav()
 
         # If the user is an administrator, give them access to the administrator pages
         if st.session_state["role"] == "administrator":

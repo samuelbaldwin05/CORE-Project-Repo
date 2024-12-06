@@ -11,33 +11,36 @@ st.set_page_config(layout = 'wide', page_title = 'Co-op Data', page_icon = 'stat
 # Display the appropriate sidebar links for the role of the logged in user
 SideBarLinks()
 
-st.title('View Co-op Data')
+st.title('View Student Information')
 
 # Getting position data to select position under review
 def fetch_data():
-    url = f'http://api:4000/p/positions/info'
+    url = f'http://api:4000/u/users/info'
     response = requests.get(url)
     response.raise_for_status()  
     data = response.json()
     return pd.DataFrame(data)
 
-# Getting PositionID
 df = fetch_data()
-position = st.selectbox("Select Position", df['PositionName'].unique())
-index = df.index[df['PositionName'] == position].tolist()
-if index:
-    posID = int(df.loc[index[0], 'PositionID'])
-    st.write(f"**PositionID**: {posID}")
+df = df[df["c.CollegeID"] == df["CollegeID"]]
+df['AdvisorName'] = df['FirstName'] + " " + df['LastName']
+col_order = ["Username", "NUID", "CollegeName", "MajorName", "GPA", "AppCount", "OfferCount", "AdvisorName"]
+df = df[col_order]
+# Rename the columns
+# rename_columns = {
+#         "Name": "Company",
+#         "PositionName": "Position",
+#         "DatePosted": "Date Posted",
+#         "YieldRate": "Yield (%)",
+#         "AvgAppAmount": "# Apps",
+#         "AvgGpa": "GPA",
+#         "AvgLearning": "Learning",
+#         "AvgEnvironment": "Environment"
+#     }
+# df.rename(columns=rename_columns, inplace=True)
+use_advisor = st.checkbox("View Only Your Students")
+if use_advisor:
+    df = df[df["AdvisorName"] == "Cammy Giles"]
+    st.dataframe(df, use_container_width=True, hide_index=True)
 else:
-    posID = None
-    st.error("No PositionID found for the selected position.")
-
-def fetch_poststats_data(posID):
-    url = f'http://api:4000/j/JobPosting/id/{posID}'
-    response = requests.get(url)
-    response.raise_for_status()  
-    data = response.json()
-    return pd.DataFrame(data)
-
-df = fetch_poststats_data(posID)
-st.dataframe(df)
+    st.dataframe(df, use_container_width=True, hide_index=True)

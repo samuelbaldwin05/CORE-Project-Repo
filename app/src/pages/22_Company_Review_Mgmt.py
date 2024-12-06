@@ -12,21 +12,27 @@ SideBarLinks()
 # Creating title and getting relationship of user to the company
 st.title("Company Management")
 
+# Function to get company stats
 def fetch_data():
     url = f'http://api:4000/c/Company/stats'
     response = requests.get(url)
     response.raise_for_status()  
     data = response.json()
     return pd.DataFrame(data)
+
+# Call fetch function to get company stats
 company_data = fetch_data()
+
+# Create two columns
 col1, col2 = st.columns(2)
 
+# Column one has company name input
 with col1:
     st.subheader("Change Company Name")
     new_company_name = st.text_input("Input new company name")
 
-
-
+# Column two choose existing company to change, button to submit change
+# Put route to make change happen
 with col2:
     st.subheader("Select Existing Company")
     selected_company = st.selectbox("Choose a company", company_data["CompanyName"].unique())
@@ -45,9 +51,7 @@ with col2:
             if response.status_code == 200:
                 st.write(f"Updated, Refresh page to view")
         except:
-            print("not cool")
+            print("Error")
 
-            
-            # Update the selectbox dynamically
         
    

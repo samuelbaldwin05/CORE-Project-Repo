@@ -28,6 +28,25 @@ def get_users():
     response.status_code = 200
     return response
 
+# Route for all user information
+@users.route('/users/info', methods=['GET'])
+def get_user_info():
+
+    query = f'''SELECT *
+                FROM Users u
+                JOIN Advisor a on u.AdvisorId = a.AdvisorID
+                JOIN Majors m on u.MajorID = m.MajorID
+                JOIN College c on m.CollegeID = m.CollegeID;
+    '''
+
+    cursor = db.get_db().cursor()
+    cursor.execute(query)
+    theData = cursor.fetchall() 
+    response = make_response(jsonify(theData))
+    response.status_code = 200
+    return response
+
+
 # GET route for Persona2, retrieves student data under specfic advisor
 @users.route('/users/<int:advisorid>', methods=['GET'])
 def view_student_data_advisorid(advisorid):

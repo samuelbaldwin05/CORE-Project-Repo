@@ -11,6 +11,7 @@ SideBarLinks()
 
 st.title('System Admin Home Page')
 
+# Buttons link to other pages
 if st.button('Delete Incorrect Data',
              type='primary',
              use_container_width=True):
