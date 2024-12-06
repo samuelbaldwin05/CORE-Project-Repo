@@ -50,23 +50,6 @@ def get_company_info():
     response.status_code = 200
 
     return response
-# Get companies by city
-@company.route('/Company/Location/<City>', methods=['GET'])
-def get_companies_by_city(City):
-    query = f'''
-        SELECT c.*
-        FROM company c
-        JOIN location l ON c.locationid = l.locationid
-        WHERE l.city = '{City}'
-    '''
-    
-    cursor = db.get_db().cursor()
-    cursor.execute(query)
-    theData = cursor.fetchall()
-    response = make_response(jsonify(theData))
-    response.status_code = 200
-    
-    return response
 
 
 # Get all company data
