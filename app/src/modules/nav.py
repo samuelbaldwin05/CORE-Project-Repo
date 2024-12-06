@@ -22,13 +22,13 @@ def PolStratAdvHomeNav():
 
 def ViewCoopsNav():
     st.sidebar.page_link(
-        "pages/01_View_Coops.py", label="Search Co-ops By Position", icon="📋"
+        "pages/01_Search_By_Position.py", label="Search Co-ops By Position", icon="📋"
     )
 
 
 def ViewCompaniesNav():
     st.sidebar.page_link(
-        "pages/02_View_Companies.py", label="Search Co-ops By Company", icon="🏢"
+        "pages/02_Search_By_Company.py", label="Search Co-ops By Company", icon="🏢"
     )
 
 
@@ -65,7 +65,7 @@ def StudentDataNav():
 
 def StudentInfoNav():
     st.sidebar.page_link(
-        "pages/32_Coop_Data.py", label="View Student Info", icon="📊"
+        "pages/32_View_Student_Info.py", label="View Student Info", icon="📊"
     )
 
 def AlterStudentDataNav():
@@ -79,10 +79,10 @@ def AdminPageNav():
         "pages/20_Admin_Home.py", label="System Admin", icon="🛠️"
     )
     st.sidebar.page_link(
-        "pages/21_Coop_Review_Mgmt.py", label="Delete Incorrect Data", icon="🗑️"
+        "pages/21_Delete_Data.py", label="Delete Incorrect Data", icon="🗑️"
     )
     st.sidebar.page_link(
-        "pages/22_Company_Review_Mgmt.py", label="Company Review Management", icon="🏢"
+        "pages/22_Change_Company_Info.py", label="Company Review Management", icon="🏢"
     )
     st.sidebar.page_link(
         "pages/23_Job_Posting_Mgmt.py", label="Job Posting Management", icon="🗂️"

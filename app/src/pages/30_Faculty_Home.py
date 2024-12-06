@@ -30,4 +30,4 @@ if st.button('View Current Positions',
 if st.button('View Student Information',
              type='primary',
              use_container_width=True):
-  st.switch_page('pages/32_Coop_Data.py')
+  st.switch_page('pages/32_View_Student_Info.py')

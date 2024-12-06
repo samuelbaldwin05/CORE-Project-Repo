@@ -28,9 +28,9 @@ if st.button("Review a Company",
 if st.button('Search Co-ops By Position',
              type='primary',
              use_container_width=True):
-  st.switch_page('pages/01_View_Coops.py')
+  st.switch_page('pages/01_Search_By_Position.py')
 
 if st.button('Search Co-ops By Company',
              type='primary',
              use_container_width=True):
-  st.switch_page('pages/02_View_Companies.py')
+  st.switch_page('pages/02_Search_By_Company.py')

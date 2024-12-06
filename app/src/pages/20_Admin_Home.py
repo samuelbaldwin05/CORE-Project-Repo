@@ -15,12 +15,12 @@ st.title('System Admin Home Page')
 if st.button('Delete Incorrect Data',
              type='primary',
              use_container_width=True):
-  st.switch_page('pages/21_Coop_Review_Mgmt.py')
+  st.switch_page('pages/21_Delete_Data.py')
 
 if st.button('Manage Coop Reviews',
              type='primary',
              use_container_width=True):
-  st.switch_page('pages/22_Company_Review_Mgmt.py')
+  st.switch_page('pages/22_Change_Company_Info.py')
 
 if st.button('Manage Job Postings',
              type='primary',

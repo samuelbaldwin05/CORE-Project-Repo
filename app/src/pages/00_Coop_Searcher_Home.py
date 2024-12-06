@@ -18,12 +18,12 @@ st.write('### What would you like to do today?')
 if st.button('Search By Position',
              type='primary',
              use_container_width=True):
-  st.switch_page('pages/01_View_Coops.py')
+  st.switch_page('pages/01_Search_By_Position.py')
 
 if st.button('Search By Company',
              type='primary',
              use_container_width=True):
-  st.switch_page('pages/02_View_Companies.py')
+  st.switch_page('pages/02_Search_By_Company.py')
 
 if st.button('View All Job Postings',
              type='primary',
