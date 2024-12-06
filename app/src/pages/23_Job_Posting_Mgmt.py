@@ -5,12 +5,26 @@ import pandas as pd
 import requests
 from streamlit_extras.app_logo import add_logo
 from modules.nav import SideBarLinks
+from datetime import datetime
 
 st.set_page_config(layout='wide', page_title='Company Review', page_icon='static/core-4.png')
 SideBarLinks()
 
 # Creating title and getting relationship of user to the company
+def fetch_company():
+    url = f'http://api:4000/c/Company/stats'
+    response = requests.get(url)
+    response.raise_for_status()  
+    data = response.json()
+    return pd.DataFrame(data)
+
 st.title("Job Posting Management")
+def fetch_positions():
+    url = f'http://api:4000/p/positions/info'
+    response = requests.get(url)
+    response.raise_for_status()  
+    data = response.json()
+    return pd.DataFrame(data)
 
 def fetch_data():
     url = f'http://api:4000/j/JobPosting'
@@ -45,7 +59,18 @@ with col2:
             print("not cool")
 
 with col3:
-    
-
-with col4:
+    df = fetch_positions()
+    df2 = fetch_company()
+    Status = st.text_input("input status")
+    PositionName = st.selectbox("Choose a PositionID", df["PositionName"].unique())
+    CompanyName = st.selectbox("Choose a companyID", df2["CompanyName"])
+    PositionID = df.loc[df['PositionName'] == PositionName, 'PositionID'].iloc[0]
+    CompanyID = df2.loc[df2['CompanyName'] == CompanyName, 'CompanyID'].iloc[0]
+    DatePosted = st.date_input("Select a date", value=datetime.now().date())
+    posting_json= {"DatePosted": str(DatePosted), "Status":bool(Status), "PositionID":int(PositionID), "CompanyID": int(CompanyID)}
+    if st.button("Submit new Posting"):
+        response = requests.post('http://api:4000/j/JobPosting', json=posting_json)
+        st.write(response.text)
+        if response.status_code == 200:
+         st.write(f"War is over, go to Jobpostingview to see")
    
