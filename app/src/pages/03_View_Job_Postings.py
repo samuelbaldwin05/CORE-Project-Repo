@@ -13,17 +13,30 @@ st.set_page_config(layout = 'wide', page_title = 'Job Search', page_icon = 'stat
 SideBarLinks()
 
 def fetch_data():
-    url = f'http://api:4000/j/job_posting/JobPosting'
+    url = f'http://api:4000/j/Info'
+    response = requests.get(url)
+    response.raise_for_status()  
+    data = response.json()
+    return pd.DataFrame(data)
 
-    try:
-        response = requests.get(url)
-        response.raise_for_status()  
-        data = response.json()
-        return pd.DataFrame(data)
-    except requests.exceptions.RequestException as e:
-        logger.error(f"Error fetching data: {e}")
-        st.error("Failed to fetch data. Please check the server.")
-        return pd.DataFrame()
-    
+st.title("Current Job Postings")   
+st.write("Learning and Environment are the average of position ratings, GPA is the average applicant GPA.")
 df = fetch_data()
+# Reorder columns
+col_order = ["Name", "PositionName", "DatePosted", "YieldRate", "AvgAppAmount", "AvgGpa", "AvgLearning", "AvgEnvironment"]
+df = df[col_order]
 
+# Rename the columns
+rename_columns = {
+        "Name": "Company",
+        "PositionName": "Position",
+        "DatePosted": "Date Posted",
+        "YieldRate": "Yield (%)",
+        "AvgAppAmount": "# Apps",
+        "AvgGpa": "GPA",
+        "AvgLearning": "Learning",
+        "AvgEnvironment": "Environment"
+    }
+df.rename(columns=rename_columns, inplace=True)
+df['Yield (%)'] = (df['Yield (%)'] * 100)
+st.dataframe(df, use_container_width=True, hide_index=True)

@@ -1,5 +1,6 @@
 from flask import Blueprint, request, jsonify, make_response, current_app
 from backend.db_connection import db
+from datetime import timedelta
 
 # Create a Blueprint object for job postings
 job_posting = Blueprint('job_posting', __name__)
@@ -16,6 +17,20 @@ def get_all_job_postings():
     cursor.execute(query)
     data = cursor.fetchall()
     return jsonify(data), 200
+
+@job_posting.route('/Info', methods=['GET'])
+def get_all_job_posting_info():
+    query = '''SELECT c.Name, pt.PositionName, jp.*, ps.AvgGpa, ps.YieldRate, ps.AvgAppAmount, ps.AvgLearning, ps.AvgEnvironment
+        FROM Company c
+        JOIN JobPosting jp ON c.CompanyID = jp.CompanyID
+        JOIN PositionTable pt ON jp.PositionID = pt.PositionID
+        JOIN PosStats ps on pt.PositionID = ps.PositionID
+        WHERE jp.Status = 1'''
+    cursor = db.get_db().cursor()
+    cursor.execute(query)
+    data = cursor.fetchall()
+    return jsonify(data), 200
+
 
 # Get job postings by PositionID
 @job_posting.route('/JobPosting/<int:PositionID>', methods=['GET'])
