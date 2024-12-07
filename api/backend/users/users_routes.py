@@ -266,3 +266,30 @@ def add_new_position():
     cursor.execute(query, params)
     db.get_db().commit()
     return jsonify({'message': 'User added successfully'}), 200
+
+
+# Put route for altering user
+@users.route('/users/update/<int:nuid>', methods=['PUT'])
+def update_user_data(nuid):
+    data = request.json
+    current_app.logger.info(data)
+    query = '''
+        UPDATE Users
+        SET Username = %s,
+            MajorID = %s,
+            GPA = %s,
+            AdvisorId = %s,
+            AppCount = %s,
+            OfferCount = %s,
+            PreviousCount = %s
+        WHERE NUID = %s
+    '''
+    params = (
+        data['Username'], data['MajorID'], data['GPA'],
+        data['AdvisorId'], data['AppCount'], data['OfferCount'],
+        data['PreviousCount'], nuid
+    )
+    cursor = db.get_db().cursor()
+    cursor.execute(query, params)
+    db.get_db().commit()
+    return jsonify({'message': 'User edited successfully'}), 200
