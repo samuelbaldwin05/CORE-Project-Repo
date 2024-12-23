@@ -1,6 +1,5 @@
 # C.O.R.E (Co-op Rating & Evaluation) 
-- An application developed by "Fonty's Little Monsters"
- Michael Maaseide, Jeff Krapf, Samuel Baldwin, Justin Zahler, Cameron Giles
+- An application developed by Samuel Baldwin, Michael Maaseide, Jeff Krapf, Justin Zahler, Cameron Giles
 
 ## Video Showcase - https://youtu.be/fIIg7k6ZBT8
 
@@ -46,10 +45,8 @@ Act as one of 4 mock personas simualting the use of our application
 ## Run Instructions 
 
 - Copy ".env.template" on local computer and rename ".env"
-- Assign local password in the ".evv" file
+- Assign local password in the ".env" file
 - Ensure Docker is updated and open, run "docker compose build" in project terminal 
 - Allow Docker to build (this may take a few minutes) than run "docker compose up" in project terminal
 - Navigate to localhost:8501 
 
-## Video Presentation Link
-https://youtu.be/fIIg7k6ZBT8
