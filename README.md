@@ -2,7 +2,7 @@
 - An application developed by "Fonty's Little Monsters"
  Michael Maaseide, Jeff Krapf, Samuel Baldwin, Justin Zahler, Cameron Giles
 
-## Video Showcase - {INSERT VIDEO LINK}
+## Video Showcase - https://youtu.be/fIIg7k6ZBT8
 
 ## Our Problem 
 
